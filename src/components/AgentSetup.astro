@@ -1,0 +1,65 @@
+---
+import CodeBlock from './CodeBlock.astro';
+import Step from './Step.astro';
+
+// The install commands are placeholders in the design, and ship as designed.
+const agents = [
+	{ id: 'claude', name: 'Claude Code', install: '[Claude Code install command, to be added when the skill is published]' },
+	{ id: 'codex', name: 'Codex', install: '[Codex install command, to be added when the skill is published]' },
+];
+const ask = [
+	'Use the a11ign skill to add screen-reader testing to this repo.',
+	'Test https://staging.example.com/checkout and run it on every pull request.',
+].join('\n');
+---
+
+<div class="ag" data-agent-setup>
+	<ol>
+		<li>
+			<Step n="1">Install the skill</Step>
+			<div class="tabs" role="tablist" aria-label="Choose your agent" data-agent-tabs>
+				{agents.map((agent, i) => (
+					<button type="button" role="tab" id={`ag-t-${agent.id}`} class="tab" aria-selected={String(i === 0)} aria-controls="ag-panel" tabindex={i === 0 ? 0 : -1} data-agent={agent.id}>{agent.name}</button>
+				))}
+			</div>
+			<div id="ag-panel" role="tabpanel" aria-labelledby="ag-t-claude">
+				{agents.map((agent, i) => (
+					<div data-agent-code={agent.id} data-active={i === 0 ? '' : undefined}>
+						<CodeBlock label={agent.name} code={agent.install} />
+					</div>
+				))}
+			</div>
+		</li>
+		<li>
+			<Step n="2">Ask in plain words</Step>
+			<CodeBlock label="Example" code={ask} />
+			<p class="cap">Say which page to test and what a user does there. Leave it out and your agent will ask. It then opens a pull request for you to review.</p>
+		</li>
+	</ol>
+</div>
+
+<script>
+	import { setupTabs } from '../scripts/tabs';
+	setupTabs();
+</script>
+
+<style is:global>
+	.ag, .ag * { box-sizing: border-box; }
+	.ag { width: 100%; color: var(--text); font-family: var(--font-sans); }
+	.ag ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 32px; }
+	.ag li { display: flex; flex-direction: column; gap: 16px; }
+	.tabs { display: inline-flex; align-self: flex-start; gap: 4px; padding: 4px; border: 2px solid var(--edge); border-radius: var(--radius-pill); }
+	.tab { min-height: 44px; padding: 0 22px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text); font: 600 17px/1 var(--font-sans); cursor: pointer; }
+	.tab:hover { background: var(--raised); }
+	.tab[aria-selected="true"] { background: var(--pen); color: var(--ink); }
+	[data-theme="light"] .tab[aria-selected="true"] { background: var(--ink); color: var(--pen-highlighter); }
+	.tab:focus-visible { outline: var(--focus-width) solid var(--focus); outline-offset: 3px; }
+	.ag .a1-code { max-width: none; width: 100%; }
+	.ag .a1-code-body { white-space: pre-wrap; overflow-wrap: break-word; font-size: 15px; }
+	.cap { margin: 0; color: var(--text-muted); font: 400 16px/1.5 var(--font-sans); }
+	/* Without JavaScript there are no tabs: both commands show, one under the other. */
+	html:not(.js) .tabs { display: none; }
+	html.js [data-agent-code]:not([data-active]) { display: none; }
+	html:not(.js) [data-agent-code] + [data-agent-code] { margin-top: 16px; }
+	@media (max-width: 860px) { .tab { padding: 0 18px; } }
+</style>

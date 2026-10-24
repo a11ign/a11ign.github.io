@@ -1,0 +1,75 @@
+---
+import '@fontsource/bricolage-grotesque/latin-600.css';
+import '@fontsource/bricolage-grotesque/latin-800.css';
+import '@fontsource/lexend/latin-400.css';
+import '@fontsource/lexend/latin-600.css';
+import '@fontsource/atkinson-hyperlegible-mono/latin-400.css';
+import '../styles/tokens.css';
+import '../styles/components.css';
+import '../styles/base.css';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { SHARE_IMAGE, SHARE_IMAGE_ALT, canonical, href, pageMeta } from '../lib/site';
+
+interface Props {
+	/** The page's URL path, which keys its title and description in the SEO pack. */
+	path: string;
+	/** Overrides the SEO pack, for the 404 page, which the pack does not list. */
+	title?: string;
+	description?: string;
+	noindex?: boolean;
+	ogType?: 'website' | 'article';
+	jsonLd?: object[];
+}
+const { path, noindex = false, ogType = 'website', jsonLd = [] } = Astro.props;
+const meta = Astro.props.title ? { title: Astro.props.title, description: Astro.props.description ?? '' } : pageMeta(path);
+const url = canonical(path);
+// Never lets a "</script>" in the data end the block early.
+const ld = (data: object) => JSON.stringify(data).replaceAll('<', '\\u003c');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{meta.title}</title>
+		{meta.description && <meta name="description" content={meta.description} />}
+		{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={url} />}
+		<link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
+		<link rel="icon" href={href('/favicon.ico')} sizes="48x48" />
+		<meta property="og:site_name" content="a11ign" />
+		<meta property="og:title" content={meta.title} />
+		{meta.description && <meta property="og:description" content={meta.description} />}
+		{!noindex && <meta property="og:url" content={url} />}
+		<meta property="og:type" content={ogType} />
+		<meta property="og:image" content={SHARE_IMAGE} />
+		<meta property="og:image:alt" content={SHARE_IMAGE_ALT} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={meta.title} />
+		{meta.description && <meta name="twitter:description" content={meta.description} />}
+		<meta name="twitter:image" content={SHARE_IMAGE} />
+		<meta name="twitter:image:alt" content={SHARE_IMAGE_ALT} />
+		<meta name="generator" content={Astro.generator} />
+		<!-- Applies a saved theme choice before first paint, so the page never flashes the wrong theme.
+		     Without JavaScript nothing runs and the system setting applies. -->
+		<script is:inline>
+			(function () {
+				var root = document.documentElement;
+				root.classList.add('js');
+				try {
+					var saved = localStorage.getItem('a11ign-theme');
+					if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+				} catch (e) {}
+			})();
+		</script>
+		{jsonLd.map((data) => <script type="application/ld+json" set:html={ld(data)} />)}
+	</head>
+	<body>
+		<div class="pg">
+			<SiteNav />
+			<slot />
+			<div style="margin-top:auto"><SiteFooter /></div>
+		</div>
+	</body>
+</html>

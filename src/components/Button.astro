@@ -1,0 +1,14 @@
+---
+import GitHubMark from './GitHubMark.astro';
+
+interface Props {
+	href: string;
+	variant?: 'primary' | 'secondary';
+	size?: 'md' | 'lg';
+	icon?: 'github';
+}
+const { href, variant = 'primary', size = 'md', icon } = Astro.props;
+const className = ['a1-btn', `a1-btn-${variant}`, size === 'lg' && 'a1-btn-lg'].filter(Boolean).join(' ');
+---
+
+<a class={className} href={href}>{icon === 'github' && <GitHubMark />}<slot /></a>

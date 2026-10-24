@@ -1,0 +1,235 @@
+---
+import Page from '../layouts/Page.astro';
+import Button from '../components/Button.astro';
+import { href } from '../lib/site';
+import { faqPage } from '../lib/jsonld';
+
+const sections = [
+	{
+		"id": "f1",
+		"title": "Getting started",
+		"items": [
+			{
+				"question": "Do I need a Windows machine?",
+				"answer": "Not if you use the GitHub Action. GitHub provides the Windows machine. Running it yourself needs one, because NVDA only runs on Windows."
+			},
+			{
+				"question": "Do I need an account or an API key?",
+				"answer": "No. The default judge ships with a11ign, and your page isn’t sent anywhere."
+			},
+			{
+				"question": "Will it break my build?",
+				"answer": "No. By default, findings don’t fail your build (fail-on is set to never), so it’s safe to add."
+			},
+			{
+				"question": "How long does a run take, and what does it cost?",
+				"answer": "A single page takes roughly two to eight minutes of machine time, depending on the page. GitHub charges more per minute for Windows runners than for Linux ones, so we suggest running a11ign on key flows and before releases, not on every commit."
+			},
+			{
+				"question": "Can it reach my staging site?",
+				"answer": "The runner has to be able to open the page. A public staging URL works. For an app that only runs inside your network, start it in an earlier step of the workflow, or use a self-hosted runner."
+			},
+			{
+				"question": "Can I use my own runner?",
+				"answer": "Yes, you swap the runs-on line for your own Windows runner labels. The machine needs an interactive desktop session, because NVDA needs one. Try it on a test pipeline first."
+			}
+		]
+	},
+	{
+		"id": "f2",
+		"title": "What it finds",
+		"items": [
+			{
+				"question": "How does it move through a page?",
+				"answer": "Not just with the Tab key. It navigates the way screen-reader users do: by headings, landmarks, form fields, images, links and lists. Then it operates the controls it finds, because some problems only show up after something is activated."
+			},
+			{
+				"question": "Does it give a score?",
+				"answer": "No, on purpose. One number hides what wasn’t checked. You get a clear result for each rule instead: failed, passed, not applicable, can’t tell, or not tested."
+			},
+			{
+				"question": "Which standards does it report against?",
+				"answer": "WCAG 2.2 AA, and WCAG 2.1 AA too, since that’s the version many laws point to. Every result lists what was checked and what wasn’t, so nothing is quietly skipped."
+			},
+			{
+				"question": "Does it work with axe-core?",
+				"answer": "Yes. Run both. a11ign goes deep on the rules that need a screen reader, and axe-core covers many more quickly, including colour contrast. You can also feed in the axe-core results you already have."
+			},
+			{
+				"question": "Why are most findings marked referred?",
+				"answer": "Referred means worth a look. Some things, like whether a link called Learn more is clear enough, depend on context a person has to judge. a11ign quotes what was said and points you to the spot."
+			},
+			{
+				"question": "What if it can’t read a page?",
+				"answer": "It tells you. A page it couldn’t measure is never reported as clean, and the run exits with an error whatever your fail-on setting says."
+			},
+			{
+				"question": "Does it replace manual testing?",
+				"answer": "No. Think of it as triage. It finds the moments worth a person’s attention and hands you the exact words the screen reader said, so nobody has to hunt for where to look."
+			},
+			{
+				"question": "Can it check PDFs?",
+				"answer": "Yes. Point it at a PDF link and it reads the document’s tag structure, with no screen reader needed. It flags untagged documents, a missing language, and images with no alternative text."
+			},
+			{
+				"question": "Is the quick check the same as a real screen reader?",
+				"answer": "No. It predicts what NVDA would say, and we publish how often it agrees. A real NVDA run confirms it. It’s coming soon."
+			}
+		]
+	},
+	{
+		"id": "f3",
+		"title": "How it works",
+		"items": [
+			{
+				"question": "Which screen reader and browser does it use?",
+				"answer": "NVDA, a free Windows screen reader, with Microsoft Edge. The NVDA version is recorded in every result, so you can see exactly what ran. JAWS, VoiceOver and Orca are planned."
+			},
+			{
+				"question": "Does it work on single-page apps?",
+				"answer": "Yes. It drives a real browser, so client-rendered pages load as they do for your users. It also checks route changes, such as a page that updates without its title changing."
+			},
+			{
+				"question": "Can it test pages behind a login?",
+				"answer": "Yes, for a username and password form, including one-time codes from an authenticator app. Single sign-on, push or text-message codes, security keys and captchas aren’t supported. The repository has to be private for logged-in runs."
+			},
+			{
+				"question": "Can I test more than one page?",
+				"answer": "Yes. List the pages in the urls setting, one per line. It’s a list you write, not a crawl. Lists longer than 5 need max-pages, up to 25."
+			},
+			{
+				"question": "What does the task setting do?",
+				"answer": "It labels the run, and it names a button for the optional form check. It doesn’t change the analysis."
+			},
+			{
+				"question": "Will I get the same result every time?",
+				"answer": "It’s built to be repeatable, with a pinned setup and the versions recorded in each result. Live pages change though, so results can change when your page does."
+			},
+			{
+				"question": "Does it need a sound device?",
+				"answer": "No. a11ign reads NVDA’s speech as text, not audio, so the machine doesn’t need speakers or a sound card."
+			},
+			{
+				"question": "Does it use AI, and can I swap the model?",
+				"answer": "By default it uses a11ign’s own trained model, which runs on the runner. You can swap in another judge, such as an OpenAI-compatible or Anthropic model, or a local one. Those need your own key or endpoint, and they send the transcript to that provider."
+			}
+		]
+	},
+	{
+		"id": "f4",
+		"title": "Safety and privacy",
+		"items": [
+			{
+				"question": "What does it send anywhere?",
+				"answer": "Nothing. It only talks to the page you point it at and your own machine. No tracking, no phoning home."
+			},
+			{
+				"question": "What does it press on my site?",
+				"answer": "It operates controls the way a screen-reader user would, and one optional setting presses buttons. Read the security page and try it on a staging app first."
+			}
+		]
+	},
+	{
+		"id": "f5",
+		"title": "Licence and law",
+		"items": [
+			{
+				"question": "Can I run it in CI on my own app?",
+				"answer": "Yes. The licence gives you unlimited permission to run the unmodified program. This isn’t legal advice, so check with your own counsel."
+			},
+			{
+				"question": "Can I use it in a closed-source project?",
+				"answer": "Running it is fine. If you modify a11ign and run it as a service, the licence says you share your changes. If that doesn’t suit you, a commercial licence may come later. Open an issue to talk about it."
+			},
+			{
+				"question": "Can it help us show we meet a legal requirement?",
+				"answer": "It gives you evidence to support that work. Whether your site meets a requirement is for you and your counsel to decide."
+			}
+		]
+	}
+];
+const questions = sections.flatMap((section) => section.items);
+---
+
+<Page path="/faq" jsonLd={[faqPage(questions)]}>
+	<main id="main" tabindex="-1">
+    <div class="wrap"><h1 class="t60">Questions <span class="a1-hl">before you try it</span></h1></div>
+    {sections.map((section) => (
+      <section class="wrap" aria-labelledby={section.id}>
+        <h2 id={section.id} class="t36">{section.title}</h2>
+        <div class="faq">
+          {section.items.map((item) => (
+            <details><summary>{item.question}</summary><div class="ans">{item.answer}</div></details>
+          ))}
+        </div>
+      </section>
+    ))}
+    <section class="wrap" aria-labelledby="f6"><h2 id="f6" class="t36">Still stuck?</h2>
+	<p class="lead" style="font-size:20px">Ask on GitHub, or tell us how your first run went.</p><div class="ctaRow"><Button size="lg" href={href('/contact')}>Contact and support</Button><Button size="lg" variant="secondary" href={href('/get-started')}>Add to your workflow</Button></div>
+	    </section>
+  </main>
+</Page>
+
+<style is:global>
+body{margin:0}
+.pg,.pg *{box-sizing:border-box}
+.pg{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--ground);color:var(--text);font:400 18px/1.6 var(--font-sans)}
+.pg h1,.pg h2,.pg h3,.pg p{margin:0}
+.pg h1,.pg h2,.pg h3{text-wrap:balance}
+.pg main{display:flex;flex-direction:column;gap:72px;padding:88px 80px 120px}
+.pg main:focus{outline:none}
+.wrap{max-width:1040px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:var(--space-5)}
+.t60{font:800 60px/1.05 var(--font-display);letter-spacing:-.03em}
+.t36{font:800 36px/1.2 var(--font-display);letter-spacing:-.02em}
+.lead{font-size:22px;color:var(--text-muted);max-width:60ch}
+.muted{color:var(--text-muted)}
+.grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.grid li{display:flex}.grid li>*{width:100%}
+.grid .a1-card{border-top:4px solid var(--pen);padding-top:var(--space-5)}
+.grid li>*,.grid .a1-card{width:100%;max-width:none}
+[data-theme="light"] .grid .a1-card{border-top-color:var(--ink)}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cmp{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--divider);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface)}
+.cmp th,.cmp td{text-align:left;vertical-align:top;padding:16px 20px;border-top:1px solid var(--divider);font-size:17px;line-height:1.5}
+.cmp thead th{border-top:0;font:600 16px/1.3 var(--font-sans);background:var(--band)}
+.cmp tbody th{font-weight:600;width:22%}
+.pill{display:inline-flex;align-self:flex-start;padding:4px 12px;border-radius:var(--radius-pill);border:1px solid var(--edge);font:600 14px/1.3 var(--font-mono)}
+.pred{background:var(--pen);color:var(--ink);border-color:var(--pen)}
+[data-theme="light"] .pred{background:var(--ink);color:var(--pen-highlighter);border-color:var(--ink)}
+.list{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
+.ph{padding:20px 24px;border:2px dashed var(--edge);border-radius:var(--radius-lg);color:var(--text-muted)}
+.faq{display:flex;flex-direction:column;border:1px solid var(--divider);border-radius:var(--radius-lg);background:var(--surface);overflow:hidden}
+.faq details{border-top:1px solid var(--divider)}
+.faq details:first-child{border-top:0}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:var(--touch-target);padding:20px 28px;font:600 20px/1.4 var(--font-sans)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";flex:none;font:600 28px/1 var(--font-mono);color:var(--pen-text)}
+.faq details[open] summary::after{content:"\2212"}
+.faq summary:focus-visible{outline:var(--focus-width) solid var(--focus);outline-offset:-4px;border-radius:8px}
+.faq .ans{padding:0 28px 24px;color:var(--text-muted);max-width:70ch}
+.ctaRow{display:flex;flex-wrap:wrap;gap:16px}
+.person{display:flex;gap:20px;align-items:flex-start;padding:24px;border:1px solid var(--divider);border-top:4px solid var(--pen);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card)}
+[data-theme="light"] .person{border-top-color:var(--ink)}
+.grid .person>.av{flex:none;width:88px;height:88px}
+.grid .person>div:last-child{flex:1 1 0;min-width:0;width:auto}
+.av{flex:none;width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--pen);color:var(--ink);font:800 30px/1 var(--font-display);letter-spacing:-.02em}
+[data-theme="light"] .av{background:var(--ink);color:var(--pen-highlighter)}
+.t22{font:600 22px/1.25 var(--font-display);letter-spacing:-.01em;margin:0 0 2px}
+.person p{margin:4px 0 0}
+.lnk2{color:var(--link);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+.lnk2:focus-visible{outline:var(--focus-width) solid var(--focus);outline-offset:3px;border-radius:6px}
+.soc{display:flex;flex-wrap:wrap;gap:12px}
+@media (max-width:1100px){.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+ .pg main{padding:48px 20px 72px;gap:48px}
+ .t60{font-size:38px}.t36{font-size:28px}.lead{font-size:19px}
+ .grid,.g3{grid-template-columns:minmax(0,1fr);gap:16px}
+ .person{flex-direction:column;gap:14px}
+ .ctaRow{flex-direction:column}
+ .cmp,.cmp tbody,.cmp tr,.cmp td,.cmp th{display:block;width:100%}
+ .cmp thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+ .cmp tbody th{width:100%;background:var(--band);padding:12px 16px}.cmp td{padding:12px 16px;border-top:0}
+ .cmp td::before{content:attr(data-l);display:block;font:600 13px/1.3 var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+ .faq summary{padding:16px 18px;font-size:18px}.faq .ans{padding:0 18px 20px}
+}
+</style>

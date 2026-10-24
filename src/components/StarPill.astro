@@ -1,0 +1,7 @@
+---
+import GitHubMark from './GitHubMark.astro';
+import { GITHUB_URL } from '../lib/site';
+---
+
+<!-- No count: the site makes no GitHub API call, and the design system shows no number at zero stars. -->
+<a class="a1-star" href={GITHUB_URL} aria-label="Star on GitHub"><GitHubMark size={20} /><span>Star</span></a>

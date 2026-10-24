@@ -1,0 +1,33 @@
+/* Page-level rules the design's boards get from their canvas: the page background and the reset. */
+html { color-scheme: dark; }
+html[data-theme="light"] { color-scheme: light; }
+@media (prefers-color-scheme: light) {
+	html:not([data-theme]) { color-scheme: light; }
+}
+body { margin: 0; background: var(--ground); color: var(--text); }
+[hidden] { display: none !important; }
+
+/* Copy buttons need JavaScript, so without it they are not shown and the code stays selectable. */
+.a1-copy { display: none; }
+html.js .a1-copy { display: inline-flex; }
+.a1-copy-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Filter chips and any other JavaScript-only control. */
+.js-only { display: none !important; }
+html.js .js-only { display: revert !important; }
+html.js .chips.js-only { display: flex !important; }
+
+main:focus { outline: none; }
+
+@media (forced-colors: active) {
+	.a1-btn, .a1-star, .a1-copy, .tab, .chipb { forced-color-adjust: auto; }
+}
+
+/* Every control gets the design system's focus ring, including links a page's own CSS does not style. */
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: var(--focus-width) solid var(--focus); outline-offset: 3px; }
+
+/* A link that stands on its own line is a control in its own right, so it is at least 44px tall. */
+.solo { display: inline-flex; align-items: center; min-height: var(--touch-target); }
+
+/* Long setting names in the docs tables wrap on the narrowest phones instead of widening the page. */
+.cookt td, .cookt th { overflow-wrap: anywhere; }

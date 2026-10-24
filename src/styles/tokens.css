@@ -1,0 +1,104 @@
+/* a11ign design system — generated from tokens.json */
+:root, [data-theme="dark"] {
+  --ground: #120d1c;
+  --band: #181226;
+  --surface: #1e1730;
+  --raised: #2a2040;
+  --text: #f7f3ff;
+  --text-muted: #d0c6e6;
+  --edge: #8e7fb5;
+  --divider: #3a2d55;
+  --ink: #120d1c;
+  --focus: #f7f3ff;
+  --link: var(--pen-text);
+  --panel: #1e1730;
+  --panel-text: #f7f3ff;
+  --panel-muted: #d0c6e6;
+  --panel-edge: #3a2d55;
+  --pen-highlighter: #d4ff3a;
+  --pen-flamingo: #ff6fb5;
+  --pen-tangerine: #ffa24a;
+  --pen-sky: #7fd0ff;
+  --pen-grape: #b79cff;
+  --pen-highlighter-text: #d4ff3a;
+  --pen-flamingo-text: #ff6fb5;
+  --pen-tangerine-text: #ffa24a;
+  --pen-sky-text: #7fd0ff;
+  --pen-grape-text: #b79cff;
+  --pen: var(--pen-highlighter);
+  --pen-text: var(--pen-highlighter-text);
+  --sev-critical: var(--pen-flamingo);
+  --sev-serious: var(--pen-tangerine);
+  --sev-moderate: var(--pen-highlighter);
+  --sev-minor: var(--pen-sky);
+  --shadow-card: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+}
+[data-theme="light"] {
+  --ground: #ffffff;
+  --band: #f6f1ff;
+  --surface: #ffffff;
+  --raised: #efe7fb;
+  --text: #140d1f;
+  --text-muted: #4c4266;
+  --edge: #7b6f99;
+  --divider: #e3daf2;
+  --ink: #120d1c;
+  --focus: #120d1c;
+  --link: var(--pen-text);
+  --panel: #120d1c;
+  --panel-text: #f7f3ff;
+  --panel-muted: #d0c6e6;
+  --panel-edge: #3a2d55;
+  --pen-highlighter: #d4ff3a;
+  --pen-flamingo: #ff6fb5;
+  --pen-tangerine: #ffa24a;
+  --pen-sky: #7fd0ff;
+  --pen-grape: #b79cff;
+  --pen-highlighter-text: #2f6b00;
+  --pen-flamingo-text: #b8135f;
+  --pen-tangerine-text: #b04a00;
+  --pen-sky-text: #0a5e9e;
+  --pen-grape-text: #5b21b6;
+  --pen: var(--pen-highlighter);
+  --pen-text: var(--pen-highlighter-text);
+  --sev-critical: var(--pen-flamingo);
+  --sev-serious: var(--pen-tangerine);
+  --sev-moderate: var(--pen-highlighter);
+  --sev-minor: var(--pen-sky);
+  --shadow-card: 0 30px 60px -30px rgba(20, 13, 31, 0.25);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+  --touch-target: 44px;
+  --focus-width: 3px;
+  --content-max: 1280px;
+  --measure: 70ch;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Lexend", system-ui, sans-serif;
+  --font-mono: "Atkinson Hyperlegible Mono", ui-monospace, monospace;
+}
+.display-xl { font-family: var(--font-display); font-size: 80px; line-height: 1.04; font-weight: 800; letter-spacing: -0.03em; }
+.display-l { font-family: var(--font-display); font-size: 60px; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; }
+.h1 { font-family: var(--font-display); font-size: 44px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; }
+.h2 { font-family: var(--font-display); font-size: 32px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
+.h3 { font-family: var(--font-display); font-size: 24px; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+.body-l { font-family: var(--font-sans); font-size: 22px; line-height: 1.6; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 18px; line-height: 1.6; font-weight: 400; }
+.body-strong { font-family: var(--font-sans); font-size: 18px; line-height: 1.6; font-weight: 600; }
+.small { font-family: var(--font-sans); font-size: 16px; line-height: 1.5; font-weight: 400; }
+.code { font-family: var(--font-mono); font-size: 16px; line-height: 1.6; font-weight: 400; }
+.code-small { font-family: var(--font-mono); font-size: 15px; line-height: 1.5; font-weight: 400; }

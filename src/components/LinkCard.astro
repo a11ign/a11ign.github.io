@@ -1,0 +1,17 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+	href: string;
+	cue?: string;
+}
+const { title, description, href, cue = 'On GitHub' } = Astro.props;
+---
+
+<a class="a1-linkcard" href={href}>
+	<span style="display:flex;flex-direction:column;gap:10px">
+		<span class="a1-linkcard-title">{title}</span>
+		{description && <span class="a1-linkcard-desc">{description}</span>}
+	</span>
+	<span class="a1-linkcard-cue">{cue}<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"></path></svg></span>
+</a>

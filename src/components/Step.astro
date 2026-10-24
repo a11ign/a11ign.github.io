@@ -1,0 +1,8 @@
+---
+interface Props {
+	n: number | string;
+}
+const { n } = Astro.props;
+---
+
+<div class="a1-step"><span class="a1-step-n" aria-hidden="true">{n}</span><span class="a1-step-t"><slot /></span></div>

@@ -1,0 +1,67 @@
+---
+import { GITHUB_URL, href } from '../lib/site';
+import logoOnAubergine from '../assets/logos/a11ign-wordmark-on-aubergine.svg?url';
+import logoOnWhite from '../assets/logos/a11ign-wordmark-on-white.svg?url';
+
+// The four social links are unfinished in the design, and ship as designed.
+const social = ['X', 'LinkedIn', 'Reddit', 'YouTube'];
+const links = [
+	{ label: 'Get started', href: href('/get-started') },
+	{ label: 'What it checks', href: href('/what-it-checks') },
+	{ label: 'Docs', href: href('/docs') },
+	{ label: 'Resources', href: href('/resources') },
+	{ label: 'FAQ', href: href('/faq') },
+	{ label: 'About', href: href('/about') },
+	{ label: 'GitHub', href: GITHUB_URL },
+	{ label: 'Contact and support', href: href('/contact') },
+];
+const legal = [
+	{ label: 'Privacy', href: href('/privacy') },
+	{ label: 'Cookies', href: href('/cookies') },
+	{ label: 'Terms', href: href('/terms') },
+	{ label: 'Accessibility', href: href('/accessibility') },
+];
+---
+
+<div class="sf">
+	<footer>
+		<div class="top">
+			<div class="brand">
+				<img class="lgd" src={logoOnAubergine} alt="a11ign, pronounced align" /><img class="lgl" src={logoOnWhite} alt="a11ign, pronounced align" />
+				<p>Free, open-source testing with a real screen reader.</p>
+				<ul class="soc" aria-label="Follow us">{social.map((name) => <li><a class="fl" href="#">{name}</a></li>)}</ul>
+			</div>
+			<nav aria-label="Footer">
+				<ul>{links.map((link) => <li><a class="fl" href={link.href}>{link.label}</a></li>)}</ul>
+			</nav>
+		</div>
+		<div class="legal"><div class="lrow"><span>Licensed under AGPL-3.0-or-later</span><nav aria-label="Legal"><ul class="llinks">{legal.map((link) => <li><a class="fl" href={link.href}>{link.label}</a></li>)}</ul></nav></div></div>
+	</footer>
+</div>
+
+<style is:global>
+	.sf, .sf * { box-sizing: border-box; }
+	.sf { width: 100%; background: var(--band); color: var(--text); font: 400 18px/1.6 var(--font-sans); }
+	.sf footer { padding: 56px 80px 40px; border-top: 1px solid var(--divider); }
+	.top { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; gap: 48px; }
+	.top nav { max-width: 640px; }
+	.brand { display: flex; flex-direction: column; gap: 14px; max-width: 520px; }
+	.brand img { height: 28px; width: auto; align-self: flex-start; }
+	.sf .lgl { display: none; }
+	[data-theme="light"] .sf .lgd { display: none; }
+	[data-theme="light"] .sf .lgl { display: block; }
+	.brand p { margin: 0; color: var(--text-muted); }
+	.sf ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px 28px; flex-wrap: wrap; justify-content: flex-end; }
+	.sf ul.soc { gap: 4px 20px; justify-content: flex-start; }
+	.fl { display: inline-flex; align-items: center; justify-content: center; min-height: var(--touch-target); min-width: var(--touch-target); color: var(--text); font: 500 18px/1.2 var(--font-sans); text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+	.fl:hover { text-decoration-thickness: 2px; }
+	.fl:focus-visible { outline: var(--focus-width) solid var(--focus); outline-offset: 3px; border-radius: 8px; }
+	.lrow { display: flex; justify-content: space-between; align-items: center; gap: 16px 32px; flex-wrap: wrap; }
+	.llinks { justify-content: flex-start; }
+	.legal { max-width: 1280px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid var(--divider); color: var(--text-muted); font-size: 16px; }
+	@media (max-width: 860px) {
+		.sf footer { padding: 40px 20px 32px; }
+		.top { flex-direction: column; gap: 24px; }
+		.sf ul { flex-direction: column; gap: 0; }
+	}
+</style>
