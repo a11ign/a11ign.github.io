@@ -3,8 +3,11 @@ export function setupTabs() {
 	document.querySelectorAll<HTMLElement>('[data-agent-tabs]').forEach((list) => {
 		const tabs = [...list.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
 		const root = list.closest('[data-agent-setup]');
-		const panel = root?.querySelector<HTMLElement>('[role="tabpanel"]');
+		const panel = root?.querySelector<HTMLElement>('[data-agent-panel]');
 		if (!root || !panel) return;
+		// Without JavaScript there are no tabs and both commands show, so the panel is only a tab panel from here on.
+		panel.setAttribute('role', 'tabpanel');
+		panel.setAttribute('aria-labelledby', (tabs.find((tab) => tab.getAttribute('aria-selected') === 'true') ?? tabs[0]).id);
 
 		const select = (tab: HTMLButtonElement, focus: boolean) => {
 			for (const t of tabs) {
@@ -22,6 +25,8 @@ export function setupTabs() {
 		tabs.forEach((tab, i) => {
 			tab.addEventListener('click', () => select(tab, false));
 			tab.addEventListener('keydown', (event) => {
+				// Alt+Arrow is the browser's Back and Forward, not ours.
+				if (event.altKey || event.ctrlKey || event.metaKey) return;
 				const last = tabs.length - 1;
 				const target =
 					event.key === 'ArrowRight' ? tabs[i === last ? 0 : i + 1]

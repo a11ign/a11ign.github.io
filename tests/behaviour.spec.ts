@@ -142,6 +142,23 @@ test.describe('install tabs', () => {
 	});
 });
 
+test.describe('install tabs, edge cases', () => {
+	test('Alt+Arrow is left to the browser, and without JavaScript there is no tab panel', async ({ page, browser }) => {
+		await page.goto('/');
+		const claude = page.getByRole('tab', { name: 'Claude Code' });
+		await claude.focus();
+		await page.keyboard.press('Alt+ArrowRight');
+		await expect(claude).toHaveAttribute('aria-selected', 'true');
+		await expect(page.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', 'ag-t-claude');
+
+		const plain = await browser.newContext({ javaScriptEnabled: false });
+		const noJs = await plain.newPage();
+		await noJs.goto('/');
+		await expect(noJs.getByRole('tabpanel')).toHaveCount(0);
+		await plain.close();
+	});
+});
+
 test.describe('resources filter', () => {
 	test('a chip shows only its posts, retitles the list and updates the count', async ({ page }) => {
 		await page.goto('/resources');
@@ -202,6 +219,26 @@ test.describe('copy buttons', () => {
 		await expect(block.getByRole('button', { name: 'Copy' })).toBeVisible();
 		const selected = await page.evaluate(() => window.getSelection()?.toString());
 		expect(selected).toContain('runs-on: windows-2022');
+	});
+
+	test('a second failure is announced again', async ({ page }) => {
+		await page.addInitScript(() => {
+			Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('blocked')) } });
+		});
+		await page.goto('/docs/github-action');
+		const block = page.locator('.a1-code').first();
+		await block.evaluate((el) => {
+			const status = el.querySelector('[data-copy-status]')!;
+			(window as unknown as { spoken: string[] }).spoken = [];
+			new MutationObserver(() => {
+				if (status.textContent) (window as unknown as { spoken: string[] }).spoken.push(status.textContent);
+			}).observe(status, { childList: true, characterData: true, subtree: true });
+		});
+		const copy = block.getByRole('button', { name: 'Copy' });
+		await copy.click();
+		await expect(block.getByRole('status')).toHaveText(/Couldn't copy/);
+		await copy.click();
+		await expect.poll(() => page.evaluate(() => (window as unknown as { spoken: string[] }).spoken.length)).toBe(2);
 	});
 
 	test('no Download button anywhere', async ({ page }) => {

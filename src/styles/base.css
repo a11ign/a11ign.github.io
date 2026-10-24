@@ -12,10 +12,6 @@ body { margin: 0; background: var(--ground); color: var(--text); }
 html.js .a1-copy { display: inline-flex; }
 .a1-copy-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Filter chips and any other JavaScript-only control. */
-.js-only { display: none !important; }
-html.js .js-only { display: revert !important; }
-html.js .chips.js-only { display: flex !important; }
 
 main:focus { outline: none; }
 
@@ -28,6 +24,3 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: var(--fo
 
 /* A link that stands on its own line is a control in its own right, so it is at least 44px tall. */
 .solo { display: inline-flex; align-items: center; min-height: var(--touch-target); }
-
-/* Long setting names in the docs tables wrap on the narrowest phones instead of widening the page. */
-.cookt td, .cookt th { overflow-wrap: anywhere; }

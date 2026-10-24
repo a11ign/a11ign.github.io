@@ -3,6 +3,8 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { chromium } from '@playwright/test';
+import { serve } from './serve.mjs';
 
 const failures = [];
 const check = (ok, message) => {
@@ -64,6 +66,28 @@ for (const file of textFiles('dist-preview').filter((f) => f.endsWith('.css'))) 
 	for (const [, , url] of readFileSync(file, 'utf8').matchAll(/url\((["']?)(\/[^)"']+)\1\)/g)) {
 		check(url.startsWith('/pr-preview/pr-1/'), `${file}: ${url} is not under the preview base`);
 	}
+}
+// In a browser, under the preview base: every request succeeds, the three fonts load, and the scripts run.
+const { server, port } = await serve(join(process.cwd(), 'dist-preview'), { base: BASE });
+const browser = await chromium.launch();
+try {
+	for (const route of ['', 'get-started', 'docs/github-action', 'resources', 'faq']) {
+		const page = await browser.newPage();
+		const bad = [];
+		page.on('response', (response) => response.status() >= 400 && bad.push(`${response.status()} ${response.url()}`));
+		page.on('pageerror', (error) => bad.push(`script error: ${error.message}`));
+		await page.goto(`http://127.0.0.1:${port}${BASE}${route}`);
+		await page.evaluate(() => document.fonts.ready);
+		const families = await page.evaluate(() => [...new Set([...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family))]);
+		check(bad.length === 0, `${BASE}${route}: ${bad.join(', ')}`);
+		check(families.includes('Lexend') && families.includes('Bricolage Grotesque'), `${BASE}${route}: fonts loaded were ${families.join(', ')}`);
+		await page.getByRole('button', { name: /Switch to (light|dark) theme/ }).click();
+		check((await page.locator('html').getAttribute('data-theme')) !== null, `${BASE}${route}: the theme toggle did nothing`);
+		await page.close();
+	}
+} finally {
+	await browser.close();
+	server.close();
 }
 check(checked > 100, `only ${checked} internal URLs were checked`);
 check(existsSync('dist-preview/index.html'), 'preview build has no index.html');

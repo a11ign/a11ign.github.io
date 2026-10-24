@@ -1,0 +1,14 @@
+---
+import logoOnAubergine from '../assets/logos/a11ign-wordmark-on-aubergine.svg?url';
+import logoOnWhite from '../assets/logos/a11ign-wordmark-on-white.svg?url';
+
+interface Props {
+	/** The alternative text for both artworks: "a11ign, pronounced align", or "" when a link around it already names it. */
+	alt: string;
+	class?: string;
+}
+const { alt, class: className = '' } = Astro.props;
+---
+
+<!-- The outlined artwork, one file per theme: the design hides whichever does not match the current theme. -->
+<img class={`${className} lgd`.trim()} src={logoOnAubergine} alt={alt} /><img class={`${className} lgl`.trim()} src={logoOnWhite} alt={alt} />

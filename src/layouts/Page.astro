@@ -51,9 +51,10 @@ const ld = (data: object) => JSON.stringify(data).replaceAll('<', '\\u003c');
 		<meta name="twitter:image" content={SHARE_IMAGE} />
 		<meta name="twitter:image:alt" content={SHARE_IMAGE_ALT} />
 		<meta name="generator" content={Astro.generator} />
-		<!-- Applies a saved theme choice before first paint, so the page never flashes the wrong theme.
-		     Without JavaScript nothing runs and the system setting applies. -->
+		
 		<script is:inline>
+			// Applies a saved theme choice before first paint, so the page never flashes the wrong theme.
+			// Without JavaScript nothing runs and the system setting applies. The key matches THEME_KEY in scripts/theme.ts.
 			(function () {
 				var root = document.documentElement;
 				root.classList.add('js');

@@ -22,7 +22,7 @@ const ask = [
 					<button type="button" role="tab" id={`ag-t-${agent.id}`} class="tab" aria-selected={String(i === 0)} aria-controls="ag-panel" tabindex={i === 0 ? 0 : -1} data-agent={agent.id}>{agent.name}</button>
 				))}
 			</div>
-			<div id="ag-panel" role="tabpanel" aria-labelledby="ag-t-claude">
+			<div id="ag-panel" data-agent-panel>
 				{agents.map((agent, i) => (
 					<div data-agent-code={agent.id} data-active={i === 0 ? '' : undefined}>
 						<CodeBlock label={agent.name} code={agent.install} />

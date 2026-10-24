@@ -29,6 +29,6 @@ const readme = readFileSync(new URL('../src/data/seo/README.md', import.meta.url
 export function seoFor(path: string) {
 	const row = readme.split('\n').find((line) => line.startsWith(`| \`${path}\` |`));
 	if (!row) throw new Error(`No SEO row for ${path}`);
-	const [, , title, description] = row.split(' | ').map((cell) => cell.replace(/^\| |^`[^`]*` ?\| ?| \|$/g, '').trim());
-	return { title: row.split('|')[2].trim(), description: row.split('|')[3].trim() };
+	const [, , title, description] = row.split('|').map((cell) => cell.trim());
+	return { title, description };
 }
