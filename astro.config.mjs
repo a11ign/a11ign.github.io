@@ -8,5 +8,7 @@ export default defineConfig({
 	site: 'https://www.a11ign.com',
 	base: process.env.BASE_PATH ?? '/',
 	trailingSlash: 'never',
-	build: { format: 'file' },
+	// "assets", not Astro's default "_astro": GitHub Pages' Jekyll skips folders that start with an underscore
+	// unless the gh-pages root has a .nojekyll, which a pull request preview does not control.
+	build: { format: 'file', assets: 'assets' },
 });
