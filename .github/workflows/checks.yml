@@ -1,0 +1,22 @@
+name: Checks
+
+# Builds the site and runs npm run check: axe-core against WCAG 2.2 AA on every page at 390 and 1440,
+# in light and dark, plus the behaviour, SEO and build checks. It is separate from the preview deploy.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check

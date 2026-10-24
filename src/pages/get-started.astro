@@ -1,0 +1,122 @@
+---
+import Page from '../layouts/Page.astro';
+import AgentSetup from '../components/AgentSetup.astro';
+import CodeBlock from '../components/CodeBlock.astro';
+import LinkCard from '../components/LinkCard.astro';
+import ReportPanel from '../components/ReportPanel.astro';
+import Step from '../components/Step.astro';
+import { href } from '../lib/site';
+const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - uses: actions/checkout@v7\n      - uses: a11ign/a11ign@<release-commit>\n        with:\n          url: https://example.com/contact\n          task: Send an enquiry";
+const prompt = "Add a11ign to this repository as a GitHub Action.\n\na11ign runs the NVDA screen reader over web pages and reports accessibility barriers, quoting what NVDA said. It needs a Windows runner, which GitHub provides.\n\nIf I have not told you, ask me for (a) the page URL to test and (b) one sentence on what a user does there, for example \"Send an enquiry\".\n\n1. Find the latest release: run git ls-remote https://github.com/a11ign/a11ign \"refs/tags/a11ign@*\". Use that release’s full 40-character commit SHA (not a tag or branch) and note the release name in a comment.\n2. Create .github/workflows/a11ign.yml. Trigger on pull_request and workflow_dispatch. Use runs-on: windows-2022, timeout-minutes: 20, and permissions contents: read and pull-requests: write.\n3. Steps: actions/checkout; then a11ign/a11ign at that SHA with id: a11ign, url and task set from my answers; then actions/upload-artifact with if: always() to keep the result-json and summary-md outputs.\n4. Leave fail-on at its default so findings cannot fail the build. Do not turn on probe-forms.\n5. Add no API keys or secrets. None are needed.\n6. Open a pull request with the change and tell me what to expect: the report appears as a comment on the pull request, and the result files are saved with the run.\n\nDo not say the site is accessible or compliant. The report lists findings for a person to check.";
+const ps = "Set-ExecutionPolicy -Scope Process Bypass -Force\nirm https://raw.githubusercontent.com/a11ign/screenreader-fleet/main/packages/worker-fleet/src/provisioning/bootstrap-windows-worker.ps1 | iex";
+const env = "export A11Y_WORKER=http://<that-machine>:8765\ncurl $A11Y_WORKER/health";
+---
+
+<Page path="/get-started">
+	<main id="main" tabindex="-1">
+	    <div class="col"><h1 class="t60">Add a11ign to <span class="a1-hl">your workflow</span></h1></div>
+	
+	    <section class="col" aria-labelledby="r1">
+	      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px">
+	        <h2 id="r1" class="t36">Option 1: GitHub Action</h2>
+	        <span class="rec">Recommended</span>
+	      </div>
+	      <p class="lead">You don’t need a Windows machine. GitHub provides one.</p>
+	      <CodeBlock label={".github/workflows/a11ign.yml"} code={yaml} />
+	      <ol class="steps">
+	        <li><Step n="1">Save it as <code class="ic">.github/workflows/a11ign.yml</code></Step></li>
+	        <li><Step n="2">Open a pull request</Step></li>
+	        <li><Step n="3">Read the report in the comment</Step></li>
+	      </ol>
+	    </section>
+	
+	    <section class="col" aria-labelledby="agent">
+	      <h2 id="agent" class="t36">Or hand it to your AI agent</h2>
+	      <p class="lead">Install the skill, then ask in plain words.</p>
+	      <AgentSetup />
+	      <details class="fb"><summary>Agent without skill support? Use this prompt instead</summary><div style="margin-top:16px"><CodeBlock label={"Prompt for your AI agent"} code={prompt} /></div></details>
+	      <p class="note">Check the version it pins. It should be a full 40-character commit from an a11ign@ release.</p>
+	    </section>
+	
+	    <section class="col" aria-labelledby="r2">
+	      <h2 id="r2" class="t36">Option 2: Command line</h2>
+	      <p class="lead">Run it from your own machine. a11ign needs a Windows machine with NVDA to drive.</p>
+	      <ol class="steps"><li><Step n="1">Set up a Windows machine with NVDA</Step></li></ol>
+	      <p class="body" style="color:var(--text-muted)">Already have one? Run this in an elevated PowerShell on it. It installs Node, Git and NVDA, starts the worker, then restarts the machine. That restart is expected.</p>
+	      <CodeBlock label={"PowerShell, on the Windows machine"} code={ps} />
+	      <p class="body" style="color:var(--text-muted)">No Windows machine? On a Mac you can build a Windows virtual machine with the scripts in <a class="lnk" style="min-height:0" href="https://github.com/a11ign/screenreader-fleet">a11ign/screenreader-fleet</a>. Most of the wait is downloading Windows.</p>
+	      <ol class="steps"><li><Step n="2">Tell a11ign where it is</Step></li></ol>
+	      <CodeBlock label={"Your own machine"} code={env} />
+	      <ol class="steps"><li><Step n="3">Run it</Step></li></ol>
+	      <CodeBlock label={"Command line"} code={"npx a11ign https://example.com --task \"Find the contact details\""} />
+	      <p class="note">Something not working? Run <code class="ic">pnpm run doctor</code> in a11ign/control. It checks each step and prints the fix.</p>
+	    </section>
+	
+	
+	    <section class="col" aria-labelledby="need">
+	      <h2 id="need" class="t36">What you need</h2>
+	      <div class="need">
+	        <div><h3 class="h3" style="margin-bottom:12px">For the GitHub Action</h3><ul><li>A GitHub project</li></ul></div>
+	        <div><h3 class="h3" style="margin-bottom:12px">For the command line</h3><ul><li>Node.js 20 or newer</li><li>A Windows machine with NVDA, set up with one command (step 1)</li></ul></div>
+	      </div>
+	    </section>
+	
+	    <section class="col" aria-labelledby="rep">
+	      <h2 id="rep" class="t36">What the report looks like</h2>
+	      <figure style="margin:0;display:flex;flex-direction:column;gap:var(--space-4)">
+	        <ReportPanel />
+	        <figcaption class="small" style="color:var(--text-muted)">A real run against example.com. The evidence line is what NVDA said.</figcaption>
+	      </figure>
+	    </section>
+	
+	    <section class="col" aria-label="More help">
+	      <LinkCard title={"Your first run, step by step"} description={"The workflow file, every setting you’ll use, and what you get back."} href={href('/docs/github-action')} cue="Read" />
+	      <LinkCard title={"Read the full docs"} description={"Guides, reference and how it all works."} href={href('/docs')} cue="Read" />
+	    </section>
+	  </main>
+</Page>
+
+<style is:global>
+body{margin:0}
+.pg,.pg *{box-sizing:border-box}
+.pg{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--ground);color:var(--text);font:400 18px/1.6 var(--font-sans)}
+.pg h1,.pg h2,.pg h3,.pg p{margin:0}
+.pg h1,.pg h2,.pg h3{text-wrap:balance}
+.pg main{display:flex;flex-direction:column;gap:80px;padding:80px 80px 112px}
+.pg main:focus{outline:none}
+.col{max-width:720px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:var(--space-5)}
+.t60{font:800 60px/1.05 var(--font-display);letter-spacing:-.03em}
+.t36{font:800 36px/1.2 var(--font-display);letter-spacing:-.02em}
+.lead{font-size:22px;color:var(--text-muted)}
+.rec{font:600 15px/1 var(--font-mono);letter-spacing:.04em;text-transform:uppercase;background:var(--pen);color:var(--ink);padding:7px 12px;border-radius:var(--radius-pill)}
+.steps{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:var(--space-4)}
+.note{padding:var(--space-4) var(--space-5);background:var(--surface);border:1px solid var(--divider);border-radius:var(--radius-md);font-weight:600}
+.need{display:flex;gap:var(--space-5)}
+.need>div{flex:1 1 0;min-width:0;padding:var(--space-6);background:var(--surface);border:1px solid var(--divider);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
+.need ul{margin:0;padding-left:22px}
+.pg code.ic{font-family:var(--font-mono);font-size:.88em;background:var(--band);border:1px solid var(--divider);border-radius:var(--radius-sm);padding:1px 7px;overflow-wrap:anywhere;word-break:break-all}
+.pg .a1-code{max-width:100%}
+.pg .a1-code-head>span:first-child{min-width:0;overflow-wrap:anywhere}
+.pg .a1-step-t{min-width:0;overflow-wrap:anywhere}
+.pg .a1-linkcard{min-height:0}
+.fb{border:1px solid var(--divider);border-radius:var(--radius-lg);background:var(--surface);padding:0 24px}
+.fb summary{cursor:pointer;min-height:var(--touch-target);display:flex;align-items:center;padding:16px 0;font:600 18px/1.4 var(--font-sans)}
+.fb summary{list-style:none;justify-content:space-between;gap:16px}
+.fb summary::-webkit-details-marker{display:none}
+.fb summary::after{content:"+";flex:none;font:600 26px/1 var(--font-mono);color:var(--pen-text)}
+.fb[open] summary::after{content:"\2212"}
+.fb[open] summary{border-bottom:1px solid var(--divider)}
+.fb[open]>div{padding-bottom:24px}
+.fb summary:focus-visible{outline:var(--focus-width) solid var(--focus);outline-offset:3px;border-radius:8px}
+.fb .a1-code{max-width:none}
+.fb .a1-code-body{white-space:pre-wrap;overflow-wrap:break-word;font-size:15px;max-height:360px;overflow-y:auto}
+@media (max-width:860px){.prompt .a1-code-body{max-height:360px;overflow-y:auto}}
+@media (max-width:860px){
+  .pg main{padding:48px 20px 72px;gap:56px}
+  .t60{font-size:38px}
+  .t36{font-size:28px}
+  .lead{font-size:19px}
+  .need{flex-direction:column}
+  .need>div{padding:var(--space-5)}
+}
+</style>

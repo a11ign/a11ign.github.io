@@ -1,0 +1,21 @@
+---
+interface Props {
+	label?: string;
+	code: string;
+}
+const { label = 'Code', code } = Astro.props;
+---
+
+<div class="a1-code">
+	<div class="a1-code-head">
+		<span>{label}</span>
+		<button type="button" class="a1-copy" data-copy>Copy</button>
+	</div>
+	<span role="status" class="a1-copy-status" data-copy-status></span>
+	<pre class="a1-code-body" tabindex="0" role="region" aria-label={`${label}, scrollable`}><code>{code}</code></pre>
+</div>
+
+<script>
+	import { setupCopyButtons } from '../scripts/copy';
+	setupCopyButtons();
+</script>

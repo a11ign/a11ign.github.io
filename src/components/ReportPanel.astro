@@ -1,0 +1,24 @@
+---
+// The sample report from the design system, with its default finding.
+const finding = {
+	heading: 'Navigate: can the user move through the page?',
+	criterion: '2.4.4 Link Purpose (In Context) (A)',
+	summary: 'The link text "Learn more" does not clearly convey its destination or purpose in context.',
+	evidence: '4. link, Learn more',
+};
+---
+
+<div class="a1-panel" role="group" aria-label="Sample a11ign report">
+	<div class="a1-panel-head">Sample report</div>
+	<div style="font-weight:600"><span class="a1-panel-brand">a11ign</span> report</div>
+	<div class="a1-panel-line">URL:  https://example.com</div>
+	<div class="a1-panel-line">Task: Read and understand this page</div>
+	<div class="a1-panel-line">Lived-experience layer (NVDA): 4 announcements</div>
+	<div class="a1-panel-line">1 finding(s):</div>
+	<div class="a1-panel-finding">
+		<div>{finding.heading}</div>
+		<div class="a1-panel-row"><span class="a1-chip a1-chip-moderate">MODERATE</span><span>{finding.criterion}</span></div>
+		<div>{finding.summary}</div>
+		<div><span class="a1-evidence">evidence: {finding.evidence}</span></div>
+	</div>
+</div>

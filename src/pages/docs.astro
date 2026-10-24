@@ -1,0 +1,48 @@
+---
+import Page from '../layouts/Page.astro';
+import LinkCard from '../components/LinkCard.astro';
+import { href, pageMeta } from '../lib/site';
+import { docsArticle, docsBreadcrumbs } from '../lib/jsonld';
+const h1 = "Documentation";
+---
+
+<Page path="/docs" ogType="article" jsonLd={[docsArticle(h1, pageMeta('/docs').description, '/docs'), docsBreadcrumbs(null, '/docs')]}>
+	<main id="main" tabindex="-1">
+	    <div class="hd">
+	      <h1 class="t60"><span class="a1-hl">Documentation</span></h1>
+	      <p class="lead">Everything you need to set up a11ign and decide whether to trust it.</p>
+	    </div>
+	    <ul class="dg">
+	      <li><LinkCard title={"Getting started"} description={"Add a11ign to your workflow and read your first report."} href={href('/get-started')} cue="Read" /></li>
+	      <li><LinkCard title={"GitHub Action guide"} description={"The workflow file, every setting you’ll use, and what you get back."} href={href('/docs/github-action')} cue="Read" /></li>
+	      <li><LinkCard title={"What to expect"} description={"What a11ign covers, how findings are decided, and how it fits your tech stack."} href={href('/what-it-checks')} cue="Read" /></li>
+	      <li><LinkCard title={"How we know it works"} description={"How we test a11ign itself, the numbers so far, and what’s next."} href={href('/docs/how-we-know-it-works')} cue="Read" /></li>
+	      <li><LinkCard title="Contributing" description={"Ways to help, how to run the checks, and the licence."} href={href('/docs/contributing')} cue="Read" /></li>
+	      <li><LinkCard title="Security" description={"What a11ign touches on your site, how to run it safely, and how to report a problem."} href={href('/docs/security')} cue="Read" /></li>
+	    </ul>
+	    <div class="hd"><p class="lead" style="font-size:19px">Prefer the source? <a class="lnk" style="min-height:0;color:var(--link);font-weight:600" href="https://github.com/a11ign/a11ign">a11ign on GitHub</a></p></div>
+	  </main>
+</Page>
+
+<style is:global>
+body{margin:0}
+.pg,.pg *{box-sizing:border-box}
+.pg{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--ground);color:var(--text);font:400 18px/1.6 var(--font-sans)}
+.pg h1,.pg h2,.pg p{margin:0}
+.pg main{display:flex;flex-direction:column;gap:56px;padding:80px 80px 112px}
+.pg main:focus{outline:none}
+.hd{max-width:1280px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.t60{font:800 60px/1.05 var(--font-display);letter-spacing:-.03em}
+.lead{font-size:22px;color:var(--text-muted);max-width:56ch}
+.dg{list-style:none;margin:0 auto;padding:0;max-width:1280px;width:100%;display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:24px}
+.dg li{display:flex}
+.dg li>*{width:100%}
+@media (max-width:1100px){.dg{grid-template-columns:repeat(2, minmax(0, 1fr))}}
+@media (max-width:860px){
+  .pg main{padding:48px 20px 72px;gap:36px}
+  .t60{font-size:38px}
+  .lead{font-size:19px}
+  .dg{grid-template-columns:minmax(0, 1fr);gap:16px}
+  .pg .a1-linkcard{min-height:150px;padding:var(--space-5)}
+}
+</style>
