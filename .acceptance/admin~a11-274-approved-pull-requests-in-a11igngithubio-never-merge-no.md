@@ -8,8 +8,8 @@ npx --yes @action-validator/cli@0.6.0 .github/workflows/checks.yml
 npx --yes @action-validator/cli@0.6.0 .github/workflows/auto-arm.yml
 # the ruleset is byte-identical to announcement-emulator's
 cmp .github/rulesets/merge-queue-main.json <(gh api repos/a11ign/announcement-emulator/contents/.github/rulesets/merge-queue-main.json --jq .content | base64 -d)
-# auto-arm.yml is announcement-emulator's, line for line, once comments and the A11-274 guard (one `flow` step per job, and the `if:` it sets) are set aside
-diff <(gh api repos/a11ign/announcement-emulator/contents/.github/workflows/auto-arm.yml --jq .content | base64 -d | grep -v '^ *#') <(grep -v '^ *#' .github/workflows/auto-arm.yml | sed "/- name: Read whether main has the merge flow/,/^          fi\$/d; /^        if: steps.flow.outputs.ready == 'true'\$/d")
+# auto-arm.yml is announcement-emulator's, line for line, once comments, the A11-274 guard (one `flow` step per arming job, and the `if:` it sets) and relay's one tolerated-refusal line are set aside (the merge-flow test runs all three)
+diff <(gh api repos/a11ign/announcement-emulator/contents/.github/workflows/auto-arm.yml --jq .content | base64 -d | grep -v '^ *#' | grep -v 'Unexpected inputs provided') <(grep -v '^ *#' .github/workflows/auto-arm.yml | grep -v 'Unexpected inputs provided' | sed "/- name: Read whether main has the merge flow/,/^          fi\$/d; /^        if: steps.flow.outputs.ready == 'true'\$/d")
 # the guard is in both jobs, and each arming step waits on it
 grep -c '^        id: flow$' .github/workflows/auto-arm.yml | grep -qx 2
 grep -c "^        if: steps.flow.outputs.ready == 'true'$" .github/workflows/auto-arm.yml | grep -qx 2
@@ -21,7 +21,7 @@ grep -qx '  merge_group:' .github/workflows/checks.yml
 grep -qx '    types: \[opened, synchronize, reopened, edited\]' .github/workflows/checks.yml
 grep -qx '  gate:' .github/workflows/checks.yml
 grep -qx '    needs: \[check\]' .github/workflows/checks.yml
-# the merge flow's steps behave as written: the guard opens only on a main with the whole flow and fails closed, and gate passes only on a successful check
+# the merge flow's steps behave as written: relay passes only while main has no copy that takes a pr; the guard opens only on a main with the whole flow and fails closed, and gate passes only on a successful check
 bash .github/tests/merge-flow.test.sh
 # the site's own checks stay green
 npm ci
