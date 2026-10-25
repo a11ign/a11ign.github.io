@@ -25,6 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # The merge flow's own steps, run as written: auto-arm's guard and this file's `gate` (A11-274).
+      - name: The merge flow behaves as it should
+        run: bash .github/tests/merge-flow.test.sh
       - uses: actions/setup-node@v7
         with:
           node-version: 24

@@ -21,6 +21,8 @@ grep -qx '  merge_group:' .github/workflows/checks.yml
 grep -qx '    types: \[opened, synchronize, reopened, edited\]' .github/workflows/checks.yml
 grep -qx '  gate:' .github/workflows/checks.yml
 grep -qx '    needs: \[check\]' .github/workflows/checks.yml
+# the merge flow's steps behave as written: the guard opens only on a main with the whole flow and fails closed, and gate passes only on a successful check
+bash .github/tests/merge-flow.test.sh
 # the site's own checks stay green
 npm ci
 npm run check
