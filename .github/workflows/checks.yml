@@ -18,5 +18,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # `.github/dependabot.yml` is GENERATED (A11-253, under A11-251) by `@a11ign/toolchain`'s `dependabot-config`, a dev dependency so that its version moves with Dependabot too.
+      # The file must be exactly its output. To fix a failure run `npx dependabot-config --write` and commit the result.
+      - name: The Dependabot config is what the toolchain generates
+        run: npx dependabot-config --check
       - run: npx playwright install --with-deps chromium
       - run: npm run check
