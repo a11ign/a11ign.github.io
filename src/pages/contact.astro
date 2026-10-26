@@ -2,7 +2,7 @@
 import '../styles/kit.css';
 import Page from '../layouts/Page.astro';
 import Button from '../components/Button.astro';
-import { href, GITHUB_URL, LINKEDIN_URL } from '../lib/site';
+import { href, GITHUB_URL, LINKEDIN_URL, X_URL } from '../lib/site';
 
 ---
 
@@ -13,7 +13,7 @@ import { href, GITHUB_URL, LINKEDIN_URL } from '../lib/site';
 	<ul class="rows"><li><h3>Questions and bugs</h3><p>Open a GitHub issue. Tell us what you ran, what you expected and what the report said.</p></li><li><h3>Share your first run</h3><p>Tell us four things: was it worth the time, what surprised you, what was noise, and what was missing. With your say-so, we may share it as a write-up.</p></li><li><h3>Report a security problem</h3><p>Use our security policy. Please don’t open a public issue.</p></li><li><h3>Press and research</h3><p>Email <a class="lnk2" href="mailto:hello@a11ign.com">hello@a11ign.com</a>.</p></li></ul>
 	    </section></div>
 	    <div class="bd"><section class="wrap" aria-labelledby="cs"><div class="sh"><h2 id="cs" class="t36">Share a11ign</h2></div>
-	<p class="lead" style="font-size:20px">Tried it? Tell people how it went. Share it where developers hang out, and follow along for updates.</p><div class="ctaRow"><Button variant="secondary" href={"https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.a11ign.com&text=a11ign%20tests%20your%20site%20with%20a%20real%20screen%20reader"}>Share on X</Button><Button variant="secondary" href={"https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.a11ign.com"}>Share on LinkedIn</Button><Button variant="secondary" href={"https://www.reddit.com/submit?url=https%3A%2F%2Fwww.a11ign.com&title=a11ign%3A%20test%20accessibility%20with%20a%20real%20screen%20reader"}>Share on Reddit</Button></div><p class="muted" style="margin-top:8px">Follow us: <a class="lnk2" href="#">X [handle]</a> &middot; <a class="lnk2" href={LINKEDIN_URL}>LinkedIn</a> &middot; <a class="lnk2" href="#">Reddit [community]</a></p>
+	<p class="lead" style="font-size:20px">Tried it? Tell people how it went. Share it where developers hang out, and follow along for updates.</p><div class="ctaRow"><Button variant="secondary" href={"https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.a11ign.com&text=a11ign%20tests%20your%20site%20with%20a%20real%20screen%20reader"}>Share on X</Button><Button variant="secondary" href={"https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.a11ign.com"}>Share on LinkedIn</Button><Button variant="secondary" href={"https://www.reddit.com/submit?url=https%3A%2F%2Fwww.a11ign.com&title=a11ign%3A%20test%20accessibility%20with%20a%20real%20screen%20reader"}>Share on Reddit</Button></div><p class="muted" style="margin-top:8px">Follow us: <a class="lnk2" href={X_URL}>X</a> &middot; <a class="lnk2" href={LINKEDIN_URL}>LinkedIn</a></p>
 	    </section></div>
 	    <div class="bd"><section class="wrap" aria-labelledby="c2"><div class="sh"><h2 id="c2" class="t36">No forms, no tracking</h2></div>
 	<p class="lead" style="font-size:20px">We don’t collect your details on this site. Everything goes through GitHub, in public unless it’s a security report.</p><div class="ctaRow"><Button size="lg" href={href('/get-started')}>Add to your workflow</Button><Button size="lg" variant="secondary" icon="github" href={GITHUB_URL}>Star on GitHub</Button></div>

@@ -191,15 +191,16 @@ test.describe('Home steps', () => {
 });
 
 test.describe('Footer and follow links', () => {
-	test('the footer lists X, LinkedIn and Reddit, LinkedIn goes to the company page, and there is no YouTube', async ({ page }) => {
+	test('the footer lists X and LinkedIn, both go to the a11ign pages, and there is no Reddit or YouTube', async ({ page }) => {
 		await page.goto('/');
 		const links = page.getByRole('contentinfo').getByRole('list', { name: 'Follow us' }).getByRole('link');
-		await expect(links).toHaveText(['X', 'LinkedIn (opens in a new tab)', 'Reddit']);
+		await expect(links).toHaveText(['X (opens in a new tab)', 'LinkedIn (opens in a new tab)']);
+		await expect(links.nth(0)).toHaveAttribute('href', 'https://x.com/a11ign');
 		await expect(links.nth(1)).toHaveAttribute('href', 'https://www.linkedin.com/company/a11ign');
-		await expect(page.getByRole('contentinfo').getByText('YouTube')).toHaveCount(0);
+		await expect(page.getByRole('contentinfo').getByText(/Reddit|YouTube/)).toHaveCount(0);
 	});
 
-	test('the gap between the X and LinkedIn text is no wider than the LinkedIn and Reddit one, plus a few pixels', async ({ page }) => {
+	test('the gap between the X and LinkedIn text is small', async ({ page }) => {
 		await page.setViewportSize({ width: 1440, height: 900 });
 		await page.goto('/');
 		const gaps = await page.$$eval('.sf .soc .fl', (links) => {
@@ -210,13 +211,16 @@ test.describe('Footer and follow links', () => {
 			});
 			return rects.slice(1).map((rect, i) => rect.left - rects[i].right);
 		});
+		expect(gaps).toHaveLength(1);
 		expect(gaps[0]).toBeLessThan(30);
-		expect(gaps[0] - gaps[1]).toBeLessThan(8);
 	});
 
-	test('Contact follows the footer: no YouTube, and the LinkedIn link is the company page without a placeholder', async ({ page }) => {
+	test('Contact follows the footer: X and LinkedIn link to the a11ign pages with no placeholder, and there is no Reddit or YouTube follow link', async ({ page }) => {
 		await page.goto('/contact');
 		await expect(page.getByText('YouTube')).toHaveCount(0);
+		const follow = page.locator('p', { hasText: 'Follow us:' });
+		await expect(follow.getByRole('link')).toHaveText(['X (opens in a new tab)', 'LinkedIn (opens in a new tab)']);
+		await expect(follow.getByRole('link').first()).toHaveAttribute('href', 'https://x.com/a11ign');
 		const linkedin = page.locator('p', { hasText: 'Follow us:' }).getByRole('link', { name: 'LinkedIn (opens in a new tab)', exact: true });
 		await expect(linkedin).toHaveAttribute('href', 'https://www.linkedin.com/company/a11ign');
 	});

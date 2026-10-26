@@ -1,13 +1,12 @@
 ---
-import { GITHUB_URL, LINKEDIN_URL, href } from '../lib/site';
+import { GITHUB_URL, LINKEDIN_URL, X_URL, href } from '../lib/site';
 import { resourcesLive } from '../data/resources';
 import Logo from './Logo.astro';
 
-// X and Reddit are still unfinished in the design, and ship as designed. LinkedIn is live. YouTube waits until there is content for it.
+// X and LinkedIn are live. Reddit and YouTube wait until there is content for them.
 const social = [
-	{ name: 'X', href: '#' },
+	{ name: 'X', href: X_URL },
 	{ name: 'LinkedIn', href: LINKEDIN_URL },
-	{ name: 'Reddit', href: '#' },
 ];
 const links = [
 	{ label: 'Get started', href: href('/get-started') },
