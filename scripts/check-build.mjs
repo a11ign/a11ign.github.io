@@ -3,9 +3,10 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 import { serve } from './serve.mjs';
-import { checkResourcesSwitch, resourcesSignals } from './resources-switch.mjs';
+import { checkResourcesSwitch, resourcesAreLive } from './resources-switch.mjs';
 
 const failures = [];
 const check = (ok, message) => {
@@ -34,7 +35,7 @@ for (const file of textFiles('dist')) {
 
 // The Resources switch: nav, footer, sitemap, llms.txt, indexing and the chips either all agree or the build fails.
 for (const problem of checkResourcesSwitch('dist')) check(false, problem);
-const resourcesLive = resourcesSignals('dist').every(Boolean);
+const resourcesLive = resourcesAreLive('dist');
 
 // robots.txt is the a11ign-seo file byte for byte, and so is llms.txt while Resources is off.
 check(readFileSync('dist/robots.txt', 'utf8') === seo('robots.txt'), 'dist/robots.txt differs from the a11ign-seo file');
@@ -71,6 +72,17 @@ for (const file of [...walk('dist-preview')].filter((f) => f.endsWith('.html')))
 	if (!/<meta name="robots" content="noindex"/.test(html)) check(canonical?.startsWith('https://www.a11ign.com') && !canonical.includes('pr-preview'), `${file}: canonical is ${canonical}`);
 	check(!/og:url" content="[^"]*pr-preview/.test(html), `${file}: og:url has the preview base`);
 }
+// With real posts the Resources page is live, and its post links stay under the preview base too.
+rmSync('dist-preview-posts', { recursive: true, force: true });
+execFileSync('npx', ['astro', 'build', '--outDir', 'dist-preview-posts'], {
+	env: { ...process.env, BASE_PATH: BASE, RESOURCES_POSTS_FILE: fileURLToPath(new URL('../tests/fixtures/resources-3-posts.json', import.meta.url)) },
+	stdio: 'pipe',
+});
+const livePage = readFileSync('dist-preview-posts/resources.html', 'utf8');
+for (const [, url] of livePage.matchAll(internal)) check(url.startsWith(BASE) || url === BASE.slice(0, -1), `dist-preview-posts/resources.html: ${url} is not under the preview base`);
+check(resourcesAreLive('dist-preview-posts'), 'a build with 3 posts did not turn the Resources switch on everywhere');
+rmSync('dist-preview-posts', { recursive: true, force: true });
+
 for (const file of textFiles('dist-preview').filter((f) => f.endsWith('.css'))) {
 	for (const [, , url] of readFileSync(file, 'utf8').matchAll(/url\((["']?)(\/[^)"']+)\1\)/g)) {
 		check(url.startsWith('/pr-preview/pr-1/'), `${file}: ${url} is not under the preview base`);

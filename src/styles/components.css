@@ -106,5 +106,5 @@
 .prose ul:not(.grid):not(.sets):not(.rows)>li::before, ul.list>li::before, .need ul>li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:10px;border-radius:2px;background:var(--pen);box-sizing:border-box}
 [data-theme="light"] .prose ul:not(.grid):not(.sets):not(.rows)>li::before, [data-theme="light"] ul.list>li::before, [data-theme="light"] .need ul>li::before{border:1.5px solid var(--ink);box-shadow:1.5px 1.5px 0 var(--ink)}
 
-@media (forced-colors:active){.a1-hl,.hl,.sh .num,.a1-logo,.a1-evidence{forced-color-adjust:auto}}
+@media (forced-colors:active){.a1-hl,.hl,.a1-logo,.a1-evidence{forced-color-adjust:auto}}
 @media (prefers-reduced-motion:reduce){.a1-btn,.a1-linkcard{transition:none}.a1-btn-primary:hover,.a1-linkcard:hover{transform:none}}

@@ -299,7 +299,9 @@ test.describe('GitHub, privacy and fonts', () => {
 		await expect(page.locator('.a1-star')).toHaveText('Star');
 		await expect(page.locator('.a1-star-count')).toHaveCount(0);
 		await page.goto('/docs/how-we-know-it-works');
-		await expect(page.getByRole('link', { name: 'Star on GitHub', exact: true }).last()).toHaveAttribute('href', GITHUB);
+		const stars = page.getByRole('link', { name: 'Star on GitHub', exact: true });
+		await expect(stars).not.toHaveCount(0);
+		for (const link of await stars.all()) await expect(link).toHaveAttribute('href', GITHUB);
 	});
 
 	test('the logos are the outlined artwork, and the footer logo says how to say it', async ({ page }) => {

@@ -36,6 +36,36 @@ const HIGHLIGHTS: Record<string, string[]> = {
 };
 const H1_HIGHLIGHTS: Record<string, string> = { '/': 'hears it.', '/get-started': 'your workflow' };
 
+interface Box { w: number; h: number; bg: string; border: string; shadow: string; radius: string; text: string | null }
+const measure = (el: Element): Box => {
+	const cs = getComputedStyle(el);
+	const { width, height } = el.getBoundingClientRect();
+	return { w: width, h: height, bg: cs.backgroundColor, border: cs.borderTopWidth, shadow: cs.boxShadow, radius: cs.borderTopLeftRadius, text: el.textContent };
+};
+
+/** The numbered chip: 44px, 8px radius, two digits; in light mode a 2px ink outline and a 3px hard shadow. */
+function expectChip(box: Box, scheme: 'dark' | 'light') {
+	expect(box.h).toBe(44);
+	expect(box.w).toBeGreaterThanOrEqual(44);
+	expect(box.radius).toBe('8px');
+	expect(box.text).toMatch(/^\d{2}$/);
+	if (scheme === 'light') {
+		expect(box.border).toBe('2px');
+		expect(box.shadow).toContain('3px 3px 0px 0px');
+	} else expect(box.border).toBe('0px');
+}
+
+/** The square marker: 18px, 3px radius, no number; in light mode a 2px ink outline and a 2px hard shadow. */
+function expectSquare(box: Box, scheme: 'dark' | 'light') {
+	expect([box.w, box.h]).toEqual([18, 18]);
+	expect(box.radius).toBe('3px');
+	expect(box.text).toBe('');
+	if (scheme === 'light') {
+		expect(box.border).toBe('2px');
+		expect(box.shadow).toContain('2px 2px 0px 0px');
+	}
+}
+
 const marks = (page: Page) => page.$$eval('.hl, .a1-hl', (els) => els.map((el) => ({ text: el.textContent ?? '', inHeading: Boolean(el.closest('h1')) ? 'h1' : el.closest('h2, h3, h4') ? 'sub' : 'text' })));
 
 for (const scheme of ['dark', 'light'] as const) {
@@ -58,29 +88,10 @@ for (const scheme of ['dark', 'light'] as const) {
 					}
 					await expect(num).toHaveCount(1);
 					await expect(num).toHaveAttribute('aria-hidden', 'true');
-					const box = await num.evaluate((el) => {
-						const cs = getComputedStyle(el);
-						return { w: el.getBoundingClientRect().width, h: el.getBoundingClientRect().height, bg: cs.backgroundColor, border: cs.borderTopWidth, shadow: cs.boxShadow, radius: cs.borderTopLeftRadius, color: cs.color, text: el.textContent };
-					});
+					const box = await num.evaluate(measure);
 					expect(box.bg).toBe('rgb(212, 255, 58)');
-					if (expected.kind === 'chip') {
-						expect(box.h).toBe(44);
-						expect(box.w).toBeGreaterThanOrEqual(44);
-						expect(box.radius).toBe('8px');
-						expect(box.text).toMatch(/^\d{2}$/);
-						if (scheme === 'light') {
-							expect(box.border).toBe('2px');
-							expect(box.shadow).toContain('3px 3px 0px 0px');
-						} else expect(box.border).toBe('0px');
-					} else {
-						expect([box.w, box.h]).toEqual([18, 18]);
-						expect(box.radius).toBe('3px');
-						expect(box.text).toBe('');
-						if (scheme === 'light') {
-							expect(box.border).toBe('2px');
-							expect(box.shadow).toContain('2px 2px 0px 0px');
-						}
-					}
+					if (expected.kind === 'chip') expectChip(box, scheme);
+					else expectSquare(box, scheme);
 				}
 				if (expected.kind === 'chip') {
 					const numbers = await sh.locator('.num').allTextContents();
@@ -245,8 +256,7 @@ test.describe('copy rules', () => {
 	test('"screen-reader" and "Nothing leaves your machine" appear on no page, in any head tag or in llms.txt', async ({ page, request }) => {
 		const paths = ['/', '/get-started', '/what-it-checks', '/docs', '/docs/github-action', '/docs/how-we-know-it-works', '/docs/security', '/docs/contributing', '/resources', '/about', '/faq', '/contact', '/privacy', '/cookies', '/terms', '/accessibility', '/pricing'];
 		for (const path of paths) {
-			const html = (await page.request.get(path, { failOnStatusCode: false })).text();
-			const text = await html;
+			const text = await (await page.request.get(path, { failOnStatusCode: false })).text();
 			expect(text, path).not.toMatch(/screen-reader/i);
 			expect(text, path).not.toMatch(/nothing leaves your machine/i);
 		}

@@ -4,7 +4,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 // @ts-expect-error: a plain .mjs module shared with scripts/check-build.mjs
-import { checkResourcesSwitch, resourcesSignals } from '../scripts/resources-switch.mjs';
+import { checkResourcesSwitch, resourcesAreLive, resourcesSignals } from '../scripts/resources-switch.mjs';
 // @ts-expect-error: a plain .mjs module
 import { serve } from '../scripts/serve.mjs';
 
@@ -36,7 +36,8 @@ test.describe('Resources while it has fewer than 3 real posts', () => {
 	});
 
 	test('the six outputs agree in the built site', () => {
-		expect(resourcesSignals('dist')).toEqual([false, false, false, false, false, false]);
+		expect(Object.values(resourcesSignals('dist'))).toEqual([false, false, false, false, false, false]);
+		expect(resourcesAreLive('dist')).toBe(false);
 		expect(checkResourcesSwitch('dist')).toEqual([]);
 	});
 });
@@ -65,7 +66,8 @@ test.describe('Resources in a build with 3 real posts', () => {
 	});
 
 	test('the nav link, footer link, sitemap entry, llms.txt line, indexing and the "All resources" section all switch on together', async ({ page, request }) => {
-		expect(resourcesSignals(join(dir, 'dist'))).toEqual([true, true, true, true, true, true]);
+		expect(Object.values(resourcesSignals(join(dir, 'dist')))).toEqual([true, true, true, true, true, true]);
+		expect(resourcesAreLive(join(dir, 'dist'))).toBe(true);
 		expect(checkResourcesSwitch(join(dir, 'dist'))).toEqual([]);
 
 		await page.goto(`${origin}/`);
@@ -94,6 +96,17 @@ test.describe('Resources in a build with 3 real posts', () => {
 		await expect(page.locator('li[data-kind]:visible')).toHaveCount(1);
 		await page.getByRole('button', { name: 'All', exact: true }).click();
 		await expect(page.locator('li[data-kind]:visible')).toHaveCount(3);
+	});
+
+	test('without JavaScript the chips are hidden and every post is in the page', async ({ browser }) => {
+		const context = await browser.newContext({ javaScriptEnabled: false });
+		const page = await context.newPage();
+		await page.goto(`${origin}/resources`);
+		await expect(page.locator('[data-chip]').first()).toBeHidden();
+		const posts = page.locator('li[data-kind]');
+		await expect(posts).toHaveCount(3);
+		for (const post of await posts.all()) await expect(post).toBeVisible();
+		await context.close();
 	});
 
 	test('the build checks fail and name the mismatch when /resources is in the sitemap but the page carries noindex', () => {

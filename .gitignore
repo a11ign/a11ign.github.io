@@ -25,3 +25,4 @@ pnpm-debug.log*
 dist-preview/
 test-results/
 playwright-report/
+dist-preview-posts/
