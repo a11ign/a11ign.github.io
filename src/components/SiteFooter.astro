@@ -1,5 +1,6 @@
 ---
 import { GITHUB_URL, href } from '../lib/site';
+import { resourcesLive } from '../data/resources';
 import Logo from './Logo.astro';
 
 // The four social links are unfinished in the design, and ship as designed.
@@ -8,7 +9,7 @@ const links = [
 	{ label: 'Get started', href: href('/get-started') },
 	{ label: 'What it checks', href: href('/what-it-checks') },
 	{ label: 'Docs', href: href('/docs') },
-	{ label: 'Resources', href: href('/resources') },
+	...(resourcesLive ? [{ label: 'Resources', href: href('/resources') }] : []),
 	{ label: 'FAQ', href: href('/faq') },
 	{ label: 'About', href: href('/about') },
 	{ label: 'GitHub', href: GITHUB_URL },

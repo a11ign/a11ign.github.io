@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>a11ign share card</title>
+<!-- The source of public/a11ign-share-card.png (2400x1260). Remake the image with: npm run share-card -->
+<style>
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 800; src: url("../../node_modules/@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Lexend"; font-weight: 400; src: url("../../node_modules/@fontsource/lexend/files/lexend-latin-400-normal.woff2") format("woff2"); }
+:root { --ground: #120d1c; --text: #f7f3ff; --text-muted: #d0c6e6; --ink: #120d1c; --pen: #d4ff3a; }
+html, body { margin: 0; }
+body { width: 2400px; height: 1260px; box-sizing: border-box; padding: 151px 160px; background: var(--ground); color: var(--text); font-family: "Lexend", sans-serif; position: relative; overflow: hidden; }
+.logo { display: inline-block; position: relative; font: 800 103px/1 "Bricolage Grotesque", sans-serif; letter-spacing: -.04em; background: var(--pen); color: var(--ink); padding: .13em .22em .13em; border-radius: .04em; white-space: nowrap; margin-right: .1em; }
+.logo::after { content: ""; position: absolute; right: -.112em; top: -.06em; bottom: -.06em; width: .06em; background: var(--text); border-radius: .02em; }
+h1 { position: absolute; left: 160px; top: 420px; margin: 0; font: 800 165px/174px "Bricolage Grotesque", sans-serif; letter-spacing: -.03em; }
+.hl { background: var(--pen); color: var(--ink); border-radius: .12em; padding: 0 .12em; }
+p { position: absolute; left: 160px; top: 1056px; margin: 0; font: 400 56px/1.4 "Lexend", sans-serif; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<span class="logo">a11ign</span>
+<h1>Test accessibility the<br>way a screen reader<br>user <span class="hl">hears it.</span></h1>
+<p>Free and open source · www.a11ign.com</p>
+</body>
+</html>

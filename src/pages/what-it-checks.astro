@@ -1,4 +1,5 @@
 ---
+import '../styles/kit.css';
 import Page from '../layouts/Page.astro';
 import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
@@ -9,17 +10,17 @@ import { href, GITHUB_URL } from '../lib/site';
 
 <Page path="/what-it-checks">
 	<main id="main" tabindex="-1">
-	    <div class="wrap"><h1 class="t60">What a11ign <span class="a1-hl">checks</span>, and how it fits your tech stack</h1></div>
-	    <section class="wrap" aria-labelledby="miss"><h2 id="miss" class="t36">What a screen reader catches that code checks miss</h2>
-	<ul class="grid"><li><Card title={"A skip link that does nothing"}>It looks right in the code, but pressing it goes nowhere. Code checks pass while a screen-reader user is stuck.</Card></li><li><Card title={"A page change nobody hears"}>The page updates but the title doesn’t, so nobody is told where they are now.</Card></li><li><Card title={"A filter or form that says nothing"}>Results change or an error appears, and nothing is read out.</Card></li><li><Card title={"Tab order that fights reading order"}>The order you tab through the page and the order it’s read out disagree, and only a real walkthrough shows it.</Card></li></ul>
-	    </section>
-	    <section class="wrap" aria-labelledby="how"><h2 id="how" class="t36">How a finding is decided</h2>
+	    <div class="bd first"><div class="wrap"><h1 class="t60">What a11ign checks, and how it fits your tech stack</h1></div></div>
+	    <div class="bd"><section class="wrap" aria-labelledby="miss"><div class="sh"><span class="num ico" aria-hidden="true"></span><h2 id="miss" class="t36">What a screen reader catches that code checks miss</h2></div>
+	<ul class="rows"><li><h3>A skip link that does nothing</h3><p>It looks right in the code, but pressing it goes nowhere. <span class="hl">Code checks pass while a screen reader user is stuck.</span></p></li><li><h3>A page change nobody hears</h3><p>The page updates but the title doesn’t, so nobody is told where they are now.</p></li><li><h3>A filter or form that says nothing</h3><p>Results change or an error appears, and nothing is read out.</p></li><li><h3>Tab order that fights reading order</h3><p>The order you tab through the page and the order it’s read out disagree, and only a real walkthrough shows it.</p></li></ul>
+	    </section></div>
+	    <div class="bd"><section class="wrap" aria-labelledby="how"><div class="sh"><span class="num ico" aria-hidden="true"></span><h2 id="how" class="t36">How a finding is decided</h2></div>
 	<p class="lead" style="font-size:20px"><strong>Asserted:</strong> the evidence settles it, so the report says the rule isn’t met. <strong>Referred:</strong> the evidence points to a problem but a person should decide, so the report quotes the words and points you to them.</p><p class="muted">What we’ve measured: across 1,405 records of pages that meet the standard, the exact rules raised no false alarms. That’s our own test set. Most findings are marked referred, and that’s expected.</p><p><a class="lnk2 solo" href={href('/docs/how-we-know-it-works')}>See the work behind these numbers</a></p>
-	    </section>
-	    <section class="wrap" aria-labelledby="stack"><h2 id="stack" class="t36">Fits inside your tech stack</h2>
+	    </section></div>
+	    <div class="bd alt"><section class="wrap" aria-labelledby="stack"><div class="sh"><span class="num ico" aria-hidden="true"></span><h2 id="stack" class="t36">Fits inside your tech stack</h2></div>
 	<p class="lead" style="font-size:20px">a11ign adds to the tools you already use. It doesn’t replace them.</p><ul class="grid"><li><Card title={"GitHub Actions"}>One step in your workflow, on a Windows runner GitHub provides. The report appears as a pull request comment, and the results are saved with the run.</Card></li><li><Card title="axe-core">Run it next to axe-core, or feed in the axe-core results you already have, so you still have one engine and one version.</Card></li><li><Card title={"Command line"}>Run it with npx from your own Windows machine with NVDA, when you want it outside CI.</Card></li><li><Card title={"Playwright tests"}>Coming soon: the quick check predicts what NVDA would say inside the Playwright tests you already run.</Card></li></ul>
-	    </section>
-	    <section class="wrap" aria-labelledby="two"><h2 id="two" class="t36">Two ways to check</h2>
+	    </section></div>
+	    <div class="bd"><section class="wrap" aria-labelledby="two"><div class="sh"><span class="num ico" aria-hidden="true"></span><h2 id="two" class="t36">Two ways to check</h2></div>
 	<table class="cmp"><thead><tr><th scope="col"><span class="sr" style="position:absolute;left:-9999px">Row</span></th><th scope="col">Real NVDA run</th><th scope="col">Quick check <span class="pill pred">Coming soon</span></th></tr></thead><tbody>
 	<tr><th scope="row">What it does</th><td data-l="Real NVDA run">Drives real NVDA and records what it said</td><td data-l="Quick check">Predicts what NVDA would say, in the browser</td></tr>
 	<tr><th scope="row">Its output is</th><td data-l="Real NVDA run">Proof: the words NVDA said</td><td data-l="Quick check">A prediction, always labelled</td></tr>
@@ -28,79 +29,16 @@ import { href, GITHUB_URL } from '../lib/site';
 	<tr><th scope="row">Measured</th><td data-l="Real NVDA run">A run takes 105 to 460 seconds of machine time per page</td><td data-l="Quick check">99.71% agreement on the 10 most common kinds of announcement (3,497 of 3,507), on pages it was not tuned to. Speed not measured yet</td></tr>
 	</tbody></table>
 	<a class="lnk solo" href={href('/docs')} style="color:var(--link);font-weight:600">Read how the quick check was measured</a>
-	    </section>
-	    <section class="wrap" aria-labelledby="not"><h2 id="not" class="t36">What to expect</h2>
+	    </section></div>
+	    <div class="bd"><section class="wrap" aria-labelledby="not"><div class="sh"><span class="num ico" aria-hidden="true"></span><h2 id="not" class="t36">What to expect</h2></div>
 	<ul class="list"><li>Proof, not a score: every finding quotes what the screen reader said.</li><li>Evidence you can act on, alongside your own judgement and legal advice.</li><li>Focused on the pages you choose, like checkout, sign-up and search.</li><li>Built to sit beside your other checks. Run it with axe-core, which covers colour contrast.</li><li>One screen reader, done properly: NVDA today. Braille, magnification and voice control aren’t covered yet.</li></ul>
-	    </section>
-	    <section class="wrap" aria-labelledby="deeper"><h2 id="deeper" class="t36">Go deeper</h2>
+	    </section></div>
+	    <div class="bd"><section class="wrap" aria-labelledby="deeper"><div class="sh"><span class="num ico" aria-hidden="true"></span><h2 id="deeper" class="t36">Go deeper</h2></div>
 	<p class="lead" style="font-size:20px">Want to see the work behind it, or how to set it up? Start here.</p><ul class="grid g3"><li><LinkCard title={"How we know it works"} description={"How we trained and tested a11ign, with the numbers."} href={href('/docs/how-we-know-it-works')} cue="Read" /></li><li><LinkCard title={"GitHub Action guide"} description={"The workflow file, the settings you will use, and what you get back."} href={href('/docs/github-action')} cue="Read" /></li><li><LinkCard title={"Why we built it"} description={"What we believe, how it is built, and what is next."} href={href('/about')} cue="Read" /></li></ul>
-	    </section>
-	    <section class="wrap" aria-labelledby="fit"><h2 id="fit" class="t36">Where it fits</h2>
+	    </section></div>
+	    <div class="bd"><section class="wrap" aria-labelledby="fit"><div class="sh"><span class="num ico" aria-hidden="true"></span><h2 id="fit" class="t36">Where it fits</h2></div>
 	<p class="lead" style="font-size:20px">Run the real check on key flows like checkout, sign-up and search, before a release, or as proof for an audit. Keep your fast code checks on every commit.</p><div class="ctaRow"><Button size="lg" href={href('/get-started')}>Add to your workflow</Button><Button size="lg" variant="secondary" icon="github" href={GITHUB_URL}>Star on GitHub</Button></div>
-	    </section>
+	    </section></div>
 	  </main>
 </Page>
 
-<style is:global>
-body{margin:0}
-.pg,.pg *{box-sizing:border-box}
-.pg{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--ground);color:var(--text);font:400 18px/1.6 var(--font-sans)}
-.pg h1,.pg h2,.pg h3,.pg p{margin:0}
-.pg h1,.pg h2,.pg h3{text-wrap:balance}
-.pg main{display:flex;flex-direction:column;gap:72px;padding:88px 80px 120px}
-.pg main:focus{outline:none}
-.wrap{max-width:1040px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:var(--space-5)}
-.t60{font:800 60px/1.05 var(--font-display);letter-spacing:-.03em}
-.t36{font:800 36px/1.2 var(--font-display);letter-spacing:-.02em}
-.lead{font-size:22px;color:var(--text-muted);max-width:60ch}
-.muted{color:var(--text-muted)}
-.grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
-.grid li{display:flex}.grid li>*{width:100%}
-.grid .a1-card{border-top:4px solid var(--pen);padding-top:var(--space-5)}
-.grid li>*,.grid .a1-card{width:100%;max-width:none}
-[data-theme="light"] .grid .a1-card{border-top-color:var(--ink)}
-.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.cmp{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--divider);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface)}
-.cmp th,.cmp td{text-align:left;vertical-align:top;padding:16px 20px;border-top:1px solid var(--divider);font-size:17px;line-height:1.5}
-.cmp thead th{border-top:0;font:600 16px/1.3 var(--font-sans);background:var(--band)}
-.cmp tbody th{font-weight:600;width:22%}
-.pill{display:inline-flex;align-self:flex-start;padding:4px 12px;border-radius:var(--radius-pill);border:1px solid var(--edge);font:600 14px/1.3 var(--font-mono)}
-.pred{background:var(--pen);color:var(--ink);border-color:var(--pen)}
-[data-theme="light"] .pred{background:var(--ink);color:var(--pen-highlighter);border-color:var(--ink)}
-.list{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
-.ph{padding:20px 24px;border:2px dashed var(--edge);border-radius:var(--radius-lg);color:var(--text-muted)}
-.faq{display:flex;flex-direction:column;border:1px solid var(--divider);border-radius:var(--radius-lg);background:var(--surface);overflow:hidden}
-.faq details{border-top:1px solid var(--divider)}
-.faq details:first-child{border-top:0}
-.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:var(--touch-target);padding:20px 28px;font:600 20px/1.4 var(--font-sans)}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";flex:none;font:600 28px/1 var(--font-mono);color:var(--pen-text)}
-.faq details[open] summary::after{content:"\2212"}
-.faq summary:focus-visible{outline:var(--focus-width) solid var(--focus);outline-offset:-4px;border-radius:8px}
-.faq .ans{padding:0 28px 24px;color:var(--text-muted);max-width:70ch}
-.ctaRow{display:flex;flex-wrap:wrap;gap:16px}
-.person{display:flex;gap:20px;align-items:flex-start;padding:24px;border:1px solid var(--divider);border-top:4px solid var(--pen);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card)}
-[data-theme="light"] .person{border-top-color:var(--ink)}
-.grid .person>.av{flex:none;width:88px;height:88px}
-.grid .person>div:last-child{flex:1 1 0;min-width:0;width:auto}
-.av{flex:none;width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--pen);color:var(--ink);font:800 30px/1 var(--font-display);letter-spacing:-.02em}
-[data-theme="light"] .av{background:var(--ink);color:var(--pen-highlighter)}
-.t22{font:600 22px/1.25 var(--font-display);letter-spacing:-.01em;margin:0 0 2px}
-.person p{margin:4px 0 0}
-.lnk2{color:var(--link);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
-.lnk2:focus-visible{outline:var(--focus-width) solid var(--focus);outline-offset:3px;border-radius:6px}
-.soc{display:flex;flex-wrap:wrap;gap:12px}
-@media (max-width:1100px){.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:860px){
- .pg main{padding:48px 20px 72px;gap:48px}
- .t60{font-size:38px}.t36{font-size:28px}.lead{font-size:19px}
- .grid,.g3{grid-template-columns:minmax(0,1fr);gap:16px}
- .person{flex-direction:column;gap:14px}
- .ctaRow{flex-direction:column}
- .cmp,.cmp tbody,.cmp tr,.cmp td,.cmp th{display:block;width:100%}
- .cmp thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
- .cmp tbody th{width:100%;background:var(--band);padding:12px 16px}.cmp td{padding:12px 16px;border-top:0}
- .cmp td::before{content:attr(data-l);display:block;font:600 13px/1.3 var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
- .faq summary{padding:16px 18px;font-size:18px}.faq .ans{padding:0 18px 20px}
-}
-</style>

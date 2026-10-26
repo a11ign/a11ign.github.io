@@ -12,6 +12,7 @@ const metaContent = (page: Page, name: string) =>
 // Every page, at both widths, in both colour schemes: 17 pages x 2 x 2 = 68 views.
 for (const entry of PAGES) {
 	const isNotFound = 'notFound' in entry;
+	const isHidden = 'hidden' in entry;
 	for (const width of WIDTHS) {
 		for (const scheme of SCHEMES) {
 			test.describe(`${entry.path} · ${width} · ${scheme}`, () => {
@@ -54,6 +55,12 @@ for (const entry of PAGES) {
 					if (isNotFound) {
 						await expect(page).toHaveTitle('Page not found');
 						expect(await metaContent(page, 'robots')).toBe('noindex');
+					} else if (isHidden) {
+						const seo = seoFor(entry.path);
+						await expect(page).toHaveTitle(seo.title);
+						expect(await metaContent(page, 'description')).toBe(seo.description);
+						expect(await metaContent(page, 'robots')).toBe('noindex');
+						await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 					} else {
 						const seo = seoFor(entry.path);
 						await expect(page).toHaveTitle(seo.title);
@@ -63,6 +70,7 @@ for (const entry of PAGES) {
 						expect(await metaContent(page, 'robots')).toBeNull();
 					}
 					expect(await metaContent(page, 'og:image')).toBe(`${CANONICAL_HOST}/a11ign-share-card.png`);
+					expect(await metaContent(page, 'og:image:alt')).toBe('a11ign: test accessibility the way a screen reader user hears it');
 					expect(await metaContent(page, 'twitter:card')).toBe('summary_large_image');
 					expect(await metaContent(page, 'og:title')).toBe(await page.title());
 				});

@@ -5,6 +5,7 @@ import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs
 import { join } from 'node:path';
 import { chromium } from '@playwright/test';
 import { serve } from './serve.mjs';
+import { checkResourcesSwitch, resourcesSignals } from './resources-switch.mjs';
 
 const failures = [];
 const check = (ok, message) => {
@@ -21,22 +22,29 @@ function* walk(dir) {
 const textFiles = (dir) => [...walk(dir)].filter((f) => /\.(html|css|js|xml|txt|svg)$/.test(f));
 const seo = (name) => readFileSync(new URL(`../src/data/seo/${name}`, import.meta.url), 'utf8');
 
-// Nothing points at Google Fonts, and no script writes a cookie.
+// Nothing points at Google Fonts, no script writes a cookie, and the two phrases the copy rules ban appear nowhere.
+// "Screen-reader" is always two words, and "nothing leaves your machine" is untrue because the Action runs on a GitHub machine.
 for (const file of textFiles('dist')) {
 	const text = readFileSync(file, 'utf8');
 	check(!/fonts\.(googleapis|gstatic)\.com/.test(text), `${file} mentions Google Fonts`);
 	check(!text.includes('document.cookie'), `${file} writes document.cookie`);
+	check(!/screen-reader/i.test(text), `${file} says "screen-reader", which is two words`);
+	check(!/nothing leaves your machine/i.test(text), `${file} says "nothing leaves your machine"`);
 }
 
-// robots.txt and llms.txt are the a11ign-seo files, byte for byte.
-for (const name of ['robots.txt', 'llms.txt']) {
-	check(readFileSync(`dist/${name}`, 'utf8') === seo(name), `dist/${name} differs from the a11ign-seo file`);
-}
+// The Resources switch: nav, footer, sitemap, llms.txt, indexing and the chips either all agree or the build fails.
+for (const problem of checkResourcesSwitch('dist')) check(false, problem);
+const resourcesLive = resourcesSignals('dist').every(Boolean);
 
-// The sitemap lists the 16 pages on the live domain, each with this build's date.
+// robots.txt is the a11ign-seo file byte for byte, and so is llms.txt while Resources is off.
+check(readFileSync('dist/robots.txt', 'utf8') === seo('robots.txt'), 'dist/robots.txt differs from the a11ign-seo file');
+if (!resourcesLive) check(readFileSync('dist/llms.txt', 'utf8') === seo('llms.txt'), 'dist/llms.txt differs from the a11ign-seo file');
+
+// The sitemap lists the pages on the live domain, each with this build's date: 15, and /resources makes 16.
+const expectedUrls = resourcesLive ? 16 : 15;
 const sitemap = readFileSync('dist/sitemap.xml', 'utf8');
 const entries = [...sitemap.matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)];
-check(entries.length === 16, `sitemap lists ${entries.length} URLs, expected 16`);
+check(entries.length === expectedUrls, `sitemap lists ${entries.length} URLs, expected ${expectedUrls}`);
 check(!sitemap.includes('[YYYY-MM-DD]'), 'sitemap still has [YYYY-MM-DD]');
 check(!/404/.test(sitemap), 'sitemap lists the 404 page');
 const today = new Date().toISOString().slice(0, 10);
@@ -59,7 +67,8 @@ for (const file of [...walk('dist-preview')].filter((f) => f.endsWith('.html')))
 	}
 	for (const [, url] of html.matchAll(/url\((["']?)(\/[^)"']+)\1\)/g)) check(false, `${file}: inline CSS url ${url}`);
 	const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
-	if (!file.endsWith('404.html')) check(canonical?.startsWith('https://www.a11ign.com') && !canonical.includes('pr-preview'), `${file}: canonical is ${canonical}`);
+	// A noindex page (the 404, and Resources while it is off) has no canonical.
+	if (!/<meta name="robots" content="noindex"/.test(html)) check(canonical?.startsWith('https://www.a11ign.com') && !canonical.includes('pr-preview'), `${file}: canonical is ${canonical}`);
 	check(!/og:url" content="[^"]*pr-preview/.test(html), `${file}: og:url has the preview base`);
 }
 for (const file of textFiles('dist-preview').filter((f) => f.endsWith('.css'))) {

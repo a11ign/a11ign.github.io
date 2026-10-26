@@ -18,11 +18,12 @@ const env = "export A11Y_WORKER=http://<that-machine>:8765\ncurl $A11Y_WORKER/he
 	
 	    <section class="col" aria-labelledby="r1">
 	      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px">
-	        <h2 id="r1" class="t36">Option 1: GitHub Action</h2>
+	        <div class="sh"><span class="num" aria-hidden="true">01</span><h2 id="r1" class="t36">Option 1: GitHub Action</h2></div>
 	        <span class="rec">Recommended</span>
 	      </div>
 	      <p class="lead">You don’t need a Windows machine. GitHub provides one.</p>
 	      <CodeBlock label={".github/workflows/a11ign.yml"} code={yaml} />
+	      <p class="note">Check the version it pins. It should be a full 40-character commit from an a11ign@ release.</p>
 	      <ol class="steps">
 	        <li><Step n="1">Save it as <code class="ic">.github/workflows/a11ign.yml</code></Step></li>
 	        <li><Step n="2">Open a pull request</Step></li>
@@ -31,15 +32,14 @@ const env = "export A11Y_WORKER=http://<that-machine>:8765\ncurl $A11Y_WORKER/he
 	    </section>
 	
 	    <section class="col" aria-labelledby="agent">
-	      <h2 id="agent" class="t36">Or hand it to your AI agent</h2>
+	      <div class="sh"><span class="num" aria-hidden="true">02</span><h2 id="agent" class="t36">Or hand it to your AI agent</h2></div>
 	      <p class="lead">Install the skill, then ask in plain words.</p>
 	      <AgentSetup />
 	      <details class="fb"><summary>Agent without skill support? Use this prompt instead</summary><div style="margin-top:16px"><CodeBlock label={"Prompt for your AI agent"} code={prompt} /></div></details>
-	      <p class="note">Check the version it pins. It should be a full 40-character commit from an a11ign@ release.</p>
 	    </section>
 	
 	    <section class="col" aria-labelledby="r2">
-	      <h2 id="r2" class="t36">Option 2: Command line</h2>
+	      <div class="sh"><span class="num" aria-hidden="true">03</span><h2 id="r2" class="t36">Option 2: Command line</h2></div>
 	      <p class="lead">Run it from your own machine. a11ign needs a Windows machine with NVDA to drive.</p>
 	      <ol class="steps"><li><Step n="1">Set up a Windows machine with NVDA</Step></li></ol>
 	      <p class="body" style="color:var(--text-muted)">Already have one? Run this in an elevated PowerShell on it. It installs Node, Git and NVDA, starts the worker, then restarts the machine. That restart is expected.</p>
@@ -54,15 +54,15 @@ const env = "export A11Y_WORKER=http://<that-machine>:8765\ncurl $A11Y_WORKER/he
 	
 	
 	    <section class="col" aria-labelledby="need">
-	      <h2 id="need" class="t36">What you need</h2>
+	      <div class="sh"><span class="num" aria-hidden="true">04</span><h2 id="need" class="t36">What you need</h2></div>
 	      <div class="need">
-	        <div><h3 class="h3" style="margin-bottom:12px">For the GitHub Action</h3><ul><li>A GitHub project</li></ul></div>
+	        <div><h3 class="h3" style="margin-bottom:12px">For the GitHub Action</h3><ul><li>A GitHub project</li><li>GitHub Actions minutes. a11ign is free, but in a private repository runs use Windows minutes, which cost more than Linux ones</li></ul></div>
 	        <div><h3 class="h3" style="margin-bottom:12px">For the command line</h3><ul><li>Node.js 20 or newer</li><li>A Windows machine with NVDA, set up with one command (step 1)</li></ul></div>
 	      </div>
 	    </section>
 	
 	    <section class="col" aria-labelledby="rep">
-	      <h2 id="rep" class="t36">What the report looks like</h2>
+	      <div class="sh"><span class="num" aria-hidden="true">05</span><h2 id="rep" class="t36">What the report looks like</h2></div>
 	      <figure style="margin:0;display:flex;flex-direction:column;gap:var(--space-4)">
 	        <ReportPanel />
 	        <figcaption class="small" style="color:var(--text-muted)">A real run against example.com. The evidence line is what NVDA said.</figcaption>
@@ -93,7 +93,7 @@ body{margin:0}
 .note{padding:var(--space-4) var(--space-5);background:var(--surface);border:1px solid var(--divider);border-radius:var(--radius-md);font-weight:600}
 .need{display:flex;gap:var(--space-5)}
 .need>div{flex:1 1 0;min-width:0;padding:var(--space-6);background:var(--surface);border:1px solid var(--divider);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
-.need ul{margin:0;padding-left:22px}
+.need ul{margin:0}
 .pg code.ic{font-family:var(--font-mono);font-size:.88em;background:var(--band);border:1px solid var(--divider);border-radius:var(--radius-sm);padding:1px 7px;overflow-wrap:anywhere;word-break:break-all}
 .pg .a1-code{max-width:100%}
 .pg .a1-code-head>span:first-child{min-width:0;overflow-wrap:anywhere}

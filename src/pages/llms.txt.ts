@@ -1,5 +1,5 @@
-import llms from '../data/seo/llms.txt?raw';
+import { llmsTxt } from '../lib/seo-files';
 
 export function GET() {
-	return new Response(llms, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+	return new Response(llmsTxt(), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

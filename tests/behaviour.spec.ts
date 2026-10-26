@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { CONTENT_PAGES } from './pages';
+import { CONTENT_PAGES, SITEMAP_PAGES } from './pages';
 
 const GITHUB = 'https://github.com/a11ign/a11ign';
 const read = (name: string) => readFileSync(new URL(`../src/data/seo/${name}`, import.meta.url), 'utf8');
@@ -66,7 +66,7 @@ test.describe('theme', () => {
 		await context.close();
 	});
 
-	test('without JavaScript the toggle, menu button, Copy buttons and filter chips are not shown and everything is in the page', async ({ browser }) => {
+	test('without JavaScript the toggle, menu button and Copy buttons are not shown and everything is in the page', async ({ browser }) => {
 		const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 900 } });
 		const page = await context.newPage();
 		await page.goto('/');
@@ -76,11 +76,6 @@ test.describe('theme', () => {
 		await expect(page.getByRole('navigation', { name: 'Main menu' })).toBeVisible();
 		await expect(page.getByText('[Claude Code install command, to be added when the skill is published]')).toBeVisible();
 		await expect(page.getByText('[Codex install command, to be added when the skill is published]')).toBeVisible();
-
-		await page.goto('/resources');
-		await expect(page.locator('[data-chip]').first()).toBeHidden();
-		await expect(page.locator('[data-kind].rc, li[data-kind]')).toHaveCount(6);
-		for (const post of await page.locator('li[data-kind]').all()) await expect(post).toBeVisible();
 
 		await page.goto('/faq');
 		const answers = await page.locator('details').count();
@@ -156,25 +151,6 @@ test.describe('install tabs, edge cases', () => {
 		await noJs.goto('/');
 		await expect(noJs.getByRole('tabpanel')).toHaveCount(0);
 		await plain.close();
-	});
-});
-
-test.describe('resources filter', () => {
-	test('a chip shows only its posts, retitles the list and updates the count', async ({ page }) => {
-		await page.goto('/resources');
-		await expect(page.getByRole('heading', { name: 'All resources' })).toBeVisible();
-		await expect(page.getByRole('status')).toHaveText('Showing 6 of 6 resources');
-		await expect(page.getByRole('button', { name: 'All', exact: true })).toHaveAttribute('aria-pressed', 'true');
-		await page.getByRole('button', { name: 'Articles' }).click();
-		await expect(page.getByRole('button', { name: 'Articles' })).toHaveAttribute('aria-pressed', 'true');
-		await expect(page.getByRole('button', { name: 'All', exact: true })).toHaveAttribute('aria-pressed', 'false');
-		await expect(page.getByRole('heading', { name: 'Articles', level: 2 })).toBeVisible();
-		await expect(page.getByRole('status')).toHaveText('Showing 2 of 6 resources');
-		await expect(page.locator('li[data-kind]:visible')).toHaveCount(2);
-		await page.getByRole('button', { name: 'Worked examples' }).click();
-		await expect(page.locator('li[data-kind]:visible')).toHaveCount(1);
-		await page.getByRole('button', { name: 'All', exact: true }).click();
-		await expect(page.locator('li[data-kind]:visible')).toHaveCount(6);
 	});
 });
 
@@ -323,7 +299,7 @@ test.describe('GitHub, privacy and fonts', () => {
 		await expect(page.locator('.a1-star')).toHaveText('Star');
 		await expect(page.locator('.a1-star-count')).toHaveCount(0);
 		await page.goto('/docs/how-we-know-it-works');
-		await expect(page.getByRole('link', { name: 'Star on GitHub to follow along' })).toHaveAttribute('href', GITHUB);
+		await expect(page.getByRole('link', { name: 'Star on GitHub', exact: true }).last()).toHaveAttribute('href', GITHUB);
 	});
 
 	test('the logos are the outlined artwork, and the footer logo says how to say it', async ({ page }) => {
@@ -348,7 +324,7 @@ test.describe('content the design marks as unfinished ships as designed', () => 
 			await expect(page.getByRole('link', { name: text })).toHaveAttribute('href', '#');
 		}
 		await page.goto('/resources');
-		await expect(page.getByText('[How to run a11ign on your first page]')).toBeVisible();
+		await expect(page.getByText('[Placeholder: two sentences on what this guide covers and who it’s for.]')).toBeVisible();
 		await expect(page.getByText('[Author] · [Date] · [Read time]')).toBeVisible();
 		await page.goto('/');
 		await expect(page.getByRole('contentinfo').getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', '#');
@@ -371,14 +347,15 @@ test.describe('search and AI files', () => {
 		expect(await (await request.get('/llms.txt')).text()).toBe(read('llms.txt'));
 	});
 
-	test('the sitemap lists the 16 pages with the build date, and not the 404', async ({ request }) => {
+	test('the sitemap lists the 15 pages with the build date, and neither the 404 nor Resources', async ({ request }) => {
 		const xml = await (await request.get('/sitemap.xml')).text();
 		const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)];
-		expect(urls.map((m) => m[1])).toEqual(CONTENT_PAGES.map((p) => `https://www.a11ign.com${p.path === '/' ? '/' : p.path}`));
+		expect(urls.map((m) => m[1])).toEqual(SITEMAP_PAGES.map((p) => `https://www.a11ign.com${p.path === '/' ? '/' : p.path}`));
 		const today = new Date().toISOString().slice(0, 10);
 		for (const [, , lastmod] of urls) expect(lastmod).toBe(today);
 		expect(xml).not.toContain('[YYYY-MM-DD]');
 		expect(xml).not.toContain('404');
+		expect(xml).not.toContain('/resources');
 	});
 });
 

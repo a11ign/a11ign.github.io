@@ -1,0 +1,5 @@
+[
+	{ "kind": "How-to", "title": "Test post one", "desc": "A fixture post, used only by the test build.", "href": "/get-started", "byline": "1 Jan 2027 · 3 min read" },
+	{ "kind": "Guide", "title": "Test post two", "desc": "A fixture post, used only by the test build.", "href": "/get-started", "byline": "2 Jan 2027 · 4 min read" },
+	{ "kind": "Article", "title": "Test post three", "desc": "A fixture post, used only by the test build.", "href": "/get-started", "byline": "3 Jan 2027 · 5 min read" }
+]
