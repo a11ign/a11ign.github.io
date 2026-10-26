@@ -2,8 +2,10 @@ import seoReadme from '../data/seo/README.md?raw';
 
 export const SITE_URL = 'https://www.a11ign.com';
 export const GITHUB_URL = 'https://github.com/a11ign/a11ign';
+export const X_URL = 'https://x.com/a11ign';
+export const LINKEDIN_URL = 'https://www.linkedin.com/company/a11ign';
 export const SHARE_IMAGE = `${SITE_URL}/a11ign-share-card.png`;
-export const SHARE_IMAGE_ALT = 'a11ign: test accessibility the way a screen-reader user hears it';
+export const SHARE_IMAGE_ALT = 'a11ign: test accessibility the way a screen reader user hears it';
 /** The date the docs pages were written, fixed in code rather than taken from the build. */
 export const DOCS_DATE = '2026-10-24';
 
@@ -15,7 +17,13 @@ export interface PageMeta {
 	description: string;
 }
 
-/** Title and description for every page, read from the a11ign-seo pack's README table. */
+/** The Resources page keeps its own title and description: the a11ign-seo pack has no row for it while it is hidden. */
+export const RESOURCES_META = {
+	title: 'Resources',
+	description: 'How-tos, guides and articles for testing with a real screen reader.',
+} as const;
+
+/** Title and description for every other page, read from the a11ign-seo pack's README table. */
 export const pages: Record<string, PageMeta> = Object.fromEntries(
 	[...seoReadme.matchAll(/^\| `([^`]+)` \| (.+?) \| (.+?) \|$/gm)].map(([, path, title, description]) => [
 		path,

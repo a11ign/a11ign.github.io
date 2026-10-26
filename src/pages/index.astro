@@ -16,13 +16,14 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	<main id="main" tabindex="-1">
 	    <section class="hero">
 	      <div class="in">
-	        <h1 class="x80">Test accessibility the way a screen-reader user <span class="a1-hl">hears it.</span></h1>
+	        <h1 class="x80">Test accessibility the way a screen reader user <span class="a1-hl">hears it.</span></h1>
 	        <p class="lead">a11ign runs a real screen reader (NVDA) over your pages and shows you the barriers it hits, with the exact words it said.</p>
 	        <div class="btns">
 	          <Button size="lg" href={href('/get-started')}>Add to your workflow</Button>
 	          <Button size="lg" variant="secondary" icon="github" href={GITHUB_URL}>Star on GitHub</Button>
 	        </div>
-	        <ul class="facts" aria-label="Key facts"><li>Free and open source</li><li>Nothing leaves your machine</li></ul>
+	        <p class="aud">For developers and QA teams who ship web apps.</p>
+	        <ul class="facts" aria-label="Key facts"><li>Free and open source</li><li>No data sent to us</li></ul>
 	      </div>
 	    </section>
 	
@@ -39,13 +40,13 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	
 	    <section class="sec" aria-labelledby="how">
 	      <div class="in stack" style="gap:var(--space-7)">
-	        <h2 id="how" class="x44">How it works</h2>
+	        <div class="sh"><span class="num" aria-hidden="true">01</span><h2 id="how" class="x44">How it works</h2></div>
 	        <div class="how">
-	          <ol class="steps">
-	            <li><Step n="1">Add a few lines to your GitHub project.</Step></li>
-	            <li><Step n="2">GitHub runs a11ign on a Windows machine, with a real screen reader.</Step></li>
-	            <li><Step n="3">Read the report on your pull request.</Step></li>
-	          </ol>
+	          <ul class="steps list">
+	            <li><Step>Add a few lines to your GitHub project.</Step></li>
+	            <li><Step>GitHub runs a11ign on a Windows machine, with a real screen reader.</Step></li>
+	            <li><Step>Read the report on your pull request.</Step></li>
+	          </ul>
 	          <div class="code"><CodeBlock label={".github/workflows/a11ign.yml"} code={yaml} /></div>
 	        </div>
 	      </div>
@@ -54,10 +55,10 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	    <section class="sec band" aria-labelledby="agent">
 	      <div class="in rep">
 	        <div class="repL">
-	          <h2 id="agent" class="x44">Let your AI agent <span class="a1-hl">set it up</span></h2>
+	          <div class="sh"><span class="num" aria-hidden="true">02</span><h2 id="agent" class="x44">Let your AI agent set it up</h2></div>
 	          <p class="body" style="color:var(--text-muted)">Install the skill, then ask in plain words. Your agent opens a pull request for you to review.</p>
 	        </div>
-	        <div class="repR"><AgentSetup /></div>
+	        <div class="repR"><AgentSetup numbered={false} /></div>
 	      </div>
 	          <div class="in" style="margin-top:var(--space-5)"><a class="lnk" href={href('/get-started') + '#agent'}>Use another agent, or paste a prompt instead</a></div>
 	    </section>
@@ -65,7 +66,7 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	    <section class="sec" aria-labelledby="rep">
 	      <div class="in rep">
 	        <div class="repL">
-	          <h2 id="rep" class="x44">What a report <span class="a1-hl">looks like</span></h2>
+	          <div class="sh"><span class="num" aria-hidden="true">03</span><h2 id="rep" class="x44">What a report looks like</h2></div>
 	          <p class="body" style="color:var(--text-muted)">Each finding names the WCAG 2.2 rule it breaks and quotes the exact words the screen reader said.</p>
 	        </div>
 	        <figure class="repR">
@@ -77,7 +78,7 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	
 	    <section class="sec band" aria-labelledby="two">
 	      <div class="in stack" style="gap:var(--space-7)">
-	        <h2 id="two" class="x44">Two ways to check</h2>
+	        <div class="sh"><span class="num" aria-hidden="true">04</span><h2 id="two" class="x44">Two ways to check</h2></div>
 	        <div class="two">
 	          <div class="twoc">
 	            <span class="ttag">Available now</span>
@@ -96,7 +97,7 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	
 	    <section class="sec" aria-labelledby="lim">
 	      <div class="in stack">
-	        <h2 id="lim" class="x44">What to expect</h2>
+	        <div class="sh"><span class="num" aria-hidden="true">05</span><h2 id="lim" class="x44">What to expect</h2></div>
 	        <ul class="lim">
 	          <li>Proof, not a score: every finding quotes what the screen reader said.</li>
 	          <li>Evidence you can act on, alongside your own judgement and legal advice.</li>
@@ -171,6 +172,7 @@ body{margin:0}
 .repR{flex:1 1 0;min-width:0;margin:0;display:flex;flex-direction:column;gap:16px}
 .how{display:flex;gap:48px;align-items:flex-start}
 .steps{list-style:none;margin:0;padding:0;width:460px;flex:none;display:flex;flex-direction:column;gap:32px}
+.steps.list>li::before{top:.42em}
 .code{flex:1 1 0;min-width:0;width:100%}
 .pyr{width:960px;max-width:100%;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:10px}
 .tt{width:54%;clip-path:polygon(10% 0,90% 0,100% 100%,0 100%);padding:28px 72px 30px;text-align:center;display:flex;flex-direction:column;gap:6px;background:var(--pen);color:var(--ink)}
@@ -183,6 +185,7 @@ body{margin:0}
 .twoc.soon{border-top-color:var(--edge)}
 .ttag{display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border-radius:var(--radius-pill);background:var(--pen);color:var(--ink);font:700 15px/1 var(--font-sans);letter-spacing:.04em;text-transform:uppercase}
 [data-theme="light"] .ttag{background:var(--ink);color:var(--pen-highlighter)}
+.aud{margin:0;color:var(--text-muted);font:400 18px/1.5 var(--font-sans)}
 .facts{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 12px}
 .facts li{padding:6px 14px;border:1px solid var(--edge);border-radius:var(--radius-pill);font:600 15px/1.3 var(--font-sans);color:var(--text)}
 .lim{list-style:none;margin:0;padding:0;max-width:880px;background:var(--surface);border:1px solid var(--divider);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}

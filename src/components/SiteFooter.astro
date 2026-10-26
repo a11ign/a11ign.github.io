@@ -1,14 +1,18 @@
 ---
-import { GITHUB_URL, href } from '../lib/site';
+import { GITHUB_URL, LINKEDIN_URL, X_URL, href } from '../lib/site';
+import { resourcesLive } from '../data/resources';
 import Logo from './Logo.astro';
 
-// The four social links are unfinished in the design, and ship as designed.
-const social = ['X', 'LinkedIn', 'Reddit', 'YouTube'];
+// X and LinkedIn are live. Reddit and YouTube wait until there is content for them.
+const social = [
+	{ name: 'X', href: X_URL },
+	{ name: 'LinkedIn', href: LINKEDIN_URL },
+];
 const links = [
 	{ label: 'Get started', href: href('/get-started') },
 	{ label: 'What it checks', href: href('/what-it-checks') },
 	{ label: 'Docs', href: href('/docs') },
-	{ label: 'Resources', href: href('/resources') },
+	...(resourcesLive ? [{ label: 'Resources', href: href('/resources') }] : []),
 	{ label: 'FAQ', href: href('/faq') },
 	{ label: 'About', href: href('/about') },
 	{ label: 'GitHub', href: GITHUB_URL },
@@ -28,7 +32,7 @@ const legal = [
 			<div class="brand">
 				<Logo alt="a11ign, pronounced align" />
 				<p>Free, open-source testing with a real screen reader.</p>
-				<ul class="soc" aria-label="Follow us">{social.map((name) => <li><a class="fl" href="#">{name}</a></li>)}</ul>
+				<ul class="soc" aria-label="Follow us">{social.map((link) => <li><a class="fl" href={link.href}>{link.name}</a></li>)}</ul>
 			</div>
 			<nav aria-label="Footer">
 				<ul>{links.map((link) => <li><a class="fl" href={link.href}>{link.label}</a></li>)}</ul>
@@ -51,7 +55,11 @@ const legal = [
 	[data-theme="light"] .sf .lgl { display: block; }
 	.brand p { margin: 0; color: var(--text-muted); }
 	.sf ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px 28px; flex-wrap: wrap; justify-content: flex-end; }
-	.sf ul.soc { gap: 4px 20px; justify-content: flex-start; }
+	/* A 44px target around a one-letter link leaves a wide gap, so the text is centred in it and the links sit closer. */
+	.sf ul.soc { gap: 4px 0; justify-content: flex-start; }
+	.sf .soc .fl { justify-content: center; padding: 0 10px; }
+	/* The first link's text lines up with the logo, so its centred box starts 15px to the left of it. */
+	.sf .soc li:first-child .fl { margin-left: -15px; }
 	.fl { display: inline-flex; align-items: center; min-height: var(--touch-target); min-width: var(--touch-target); color: var(--text); font: 500 18px/1.2 var(--font-sans); text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
 	.fl:hover { text-decoration-thickness: 2px; }
 	.fl:focus-visible { outline: var(--focus-width) solid var(--focus); outline-offset: 3px; border-radius: 8px; }
@@ -62,5 +70,8 @@ const legal = [
 		.sf footer { padding: 40px 20px 32px; }
 		.top { flex-direction: column; gap: 24px; }
 		.sf ul { flex-direction: column; gap: 0; }
+		/* The links are stacked here, so they keep the left edge. */
+		.sf .soc .fl { justify-content: flex-start; padding: 0; }
+		.sf .soc li:first-child .fl { margin-left: 0; }
 	}
 </style>

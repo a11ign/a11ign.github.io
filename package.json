@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "share-card": "node scripts/make-share-card.mjs",
     "check": "npm run build && node scripts/check-build.mjs && playwright test"
   },
   "dependencies": {

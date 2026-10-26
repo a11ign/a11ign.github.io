@@ -1,8 +1,9 @@
 ---
 interface Props {
-	n: number | string;
+	/** The step number. Leave it out where the section's own chip already numbers the steps. */
+	n?: number | string;
 }
 const { n } = Astro.props;
 ---
 
-<div class="a1-step"><span class="a1-step-n" aria-hidden="true">{n}</span><span class="a1-step-t"><slot /></span></div>
+<div class:list={['a1-step', n === undefined && 'a1-step-bare']}>{n !== undefined && <span class="a1-step-n" aria-hidden="true">{n}</span>}<span class="a1-step-t"><slot /></span></div>
