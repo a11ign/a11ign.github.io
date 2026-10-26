@@ -293,13 +293,13 @@ test.describe('GitHub, privacy and fonts', () => {
 
 	test('the GitHub links, StarPill and Star buttons go to the repository, with no count', async ({ page }) => {
 		await page.goto('/');
-		for (const link of await page.getByRole('link', { name: /^GitHub$/ }).all()) await expect(link).toHaveAttribute('href', GITHUB);
-		const star = page.getByRole('link', { name: 'Star on GitHub', exact: true });
+		for (const link of await page.getByRole('link', { name: /^GitHub( \(opens in a new tab\))?$/ }).all()) await expect(link).toHaveAttribute('href', GITHUB);
+		const star = page.getByRole('link', { name: /^Star on GitHub( \(opens in a new tab\))?$/ });
 		for (const link of await star.all()) await expect(link).toHaveAttribute('href', GITHUB);
 		await expect(page.locator('.a1-star')).toHaveText('Star');
 		await expect(page.locator('.a1-star-count')).toHaveCount(0);
 		await page.goto('/docs/how-we-know-it-works');
-		const stars = page.getByRole('link', { name: 'Star on GitHub', exact: true });
+		const stars = page.getByRole('link', { name: /^Star on GitHub( \(opens in a new tab\))?$/ });
 		await expect(stars).not.toHaveCount(0);
 		for (const link of await stars.all()) await expect(link).toHaveAttribute('href', GITHUB);
 	});

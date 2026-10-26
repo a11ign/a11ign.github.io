@@ -13,6 +13,9 @@ html.js .a1-copy { display: inline-flex; }
 .a1-copy-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 
+/* "(opens in a new tab)", added after every link that leaves the site (src/lib/external-links.ts): read aloud, not shown. */
+.ext-hint { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
 main:focus { outline: none; }
 
 @media (forced-colors: active) {

@@ -194,7 +194,7 @@ test.describe('Footer and follow links', () => {
 	test('the footer lists X, LinkedIn and Reddit, LinkedIn goes to the company page, and there is no YouTube', async ({ page }) => {
 		await page.goto('/');
 		const links = page.getByRole('contentinfo').getByRole('list', { name: 'Follow us' }).getByRole('link');
-		await expect(links).toHaveText(['X', 'LinkedIn', 'Reddit']);
+		await expect(links).toHaveText(['X', 'LinkedIn (opens in a new tab)', 'Reddit']);
 		await expect(links.nth(1)).toHaveAttribute('href', 'https://www.linkedin.com/company/a11ign');
 		await expect(page.getByRole('contentinfo').getByText('YouTube')).toHaveCount(0);
 	});
@@ -205,7 +205,7 @@ test.describe('Footer and follow links', () => {
 		const gaps = await page.$$eval('.sf .soc .fl', (links) => {
 			const rects = links.map((link) => {
 				const range = document.createRange();
-				range.selectNodeContents(link);
+				range.selectNodeContents(link.firstChild!); // the visible text, not the hidden "(opens in a new tab)"
 				return range.getBoundingClientRect();
 			});
 			return rects.slice(1).map((rect, i) => rect.left - rects[i].right);
@@ -217,7 +217,7 @@ test.describe('Footer and follow links', () => {
 	test('Contact follows the footer: no YouTube, and the LinkedIn link is the company page without a placeholder', async ({ page }) => {
 		await page.goto('/contact');
 		await expect(page.getByText('YouTube')).toHaveCount(0);
-		const linkedin = page.locator('p', { hasText: 'Follow us:' }).getByRole('link', { name: 'LinkedIn', exact: true });
+		const linkedin = page.locator('p', { hasText: 'Follow us:' }).getByRole('link', { name: 'LinkedIn (opens in a new tab)', exact: true });
 		await expect(linkedin).toHaveAttribute('href', 'https://www.linkedin.com/company/a11ign');
 	});
 });
@@ -226,7 +226,7 @@ test.describe('About', () => {
 	test('the roadmap section has no buttons: the two below it are the only pair', async ({ page }) => {
 		await page.goto('/about');
 		await expect(page.locator('section[aria-labelledby="next"] a.a1-btn')).toHaveCount(0);
-		await expect(page.locator('main a.a1-btn')).toHaveText(['Add to your workflow', 'Star on GitHub']);
+		await expect(page.locator('main a.a1-btn')).toHaveText(['Add to your workflow', 'Star on GitHub (opens in a new tab)']);
 	});
 });
 
