@@ -2,17 +2,32 @@ name: Checks
 
 # Builds the site and runs npm run check: axe-core against WCAG 2.2 AA on every page at 390 and 1440,
 # in light and dark, plus the behaviour, SEO and build checks. It is separate from the preview deploy.
+#
+# It is also the merge gate (A11-274, as A11-237 gave announcement-emulator): the job `gate` below is the check the
+# `merge-queue-main` ruleset requires (`.github/rulesets/merge-queue-main.json`). `merge_group` is what lets the queue's temporary
+# branches run it: a required check that never runs on one blocks the queue for ever. A job added later goes into `gate`'s `needs`.
 on:
+  # `edited` because a pull request that was open before this file merged has no `gate` run, and a body edit gives it one without a push.
+  # The concurrency group below cancels the run an edit interrupts.
   pull_request:
+    types: [opened, synchronize, reopened, edited]
+  merge_group:
 
 permissions:
   contents: read
+
+concurrency:
+  group: checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # The merge flow's own steps, run as written: auto-arm's guard and this file's `gate` (A11-274).
+      - name: The merge flow behaves as it should
+        run: bash .github/tests/merge-flow.test.sh
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -24,3 +39,19 @@ jobs:
         run: npx dependabot-config --check
       - run: npx playwright install --with-deps chromium
       - run: npm run check
+
+  # THE REQUIRED CHECK. `if: always()` because a job whose need failed is SKIPPED, and a skipped required check counts as passed; the step
+  # accepts `success` ONLY, so a job that was skipped or cancelled fails the gate.
+  gate:
+    needs: [check]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every job ran, and ran clean
+        run: |
+          for result in "${{ needs.check.result }}"; do
+            if [ "$result" != "success" ]; then
+              echo "::error::a job reported '$result', not success"
+              exit 1
+            fi
+          done
