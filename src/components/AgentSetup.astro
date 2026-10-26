@@ -2,6 +2,12 @@
 import CodeBlock from './CodeBlock.astro';
 import Step from './Step.astro';
 
+interface Props {
+	/** The two steps carry number circles by default. Home leaves them off, because its section chip already numbers the section. */
+	numbered?: boolean;
+}
+const { numbered = true } = Astro.props;
+
 // The install commands are placeholders in the design, and ship as designed.
 const agents = [
 	{ id: 'claude', name: 'Claude Code', install: '[Claude Code install command, to be added when the skill is published]' },
@@ -16,7 +22,7 @@ const ask = [
 <div class="ag" data-agent-setup>
 	<ol>
 		<li>
-			<Step n="1">Install the skill</Step>
+			<Step n={numbered ? 1 : undefined}>Install the skill</Step>
 			<div class="tabs" role="tablist" aria-label="Choose your agent" data-agent-tabs>
 				{agents.map((agent, i) => (
 					<button type="button" role="tab" id={`ag-t-${agent.id}`} class="tab" aria-selected={String(i === 0)} aria-controls="ag-panel" tabindex={i === 0 ? 0 : -1} data-agent={agent.id}>{agent.name}</button>
@@ -31,7 +37,7 @@ const ask = [
 			</div>
 		</li>
 		<li>
-			<Step n="2">Ask in plain words</Step>
+			<Step n={numbered ? 2 : undefined}>Ask in plain words</Step>
 			<CodeBlock label="Example" code={ask} />
 			<p class="cap">Say which page to test and what a user does there. Leave it out and your agent will ask. It then opens a pull request for you to review.</p>
 		</li>

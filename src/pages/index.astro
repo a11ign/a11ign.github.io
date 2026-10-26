@@ -42,11 +42,11 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	      <div class="in stack" style="gap:var(--space-7)">
 	        <div class="sh"><span class="num" aria-hidden="true">01</span><h2 id="how" class="x44">How it works</h2></div>
 	        <div class="how">
-	          <ol class="steps">
-	            <li><Step n="1">Add a few lines to your GitHub project.</Step></li>
-	            <li><Step n="2">GitHub runs a11ign on a Windows machine, with a real screen reader.</Step></li>
-	            <li><Step n="3">Read the report on your pull request.</Step></li>
-	          </ol>
+	          <ul class="steps list">
+	            <li><Step>Add a few lines to your GitHub project.</Step></li>
+	            <li><Step>GitHub runs a11ign on a Windows machine, with a real screen reader.</Step></li>
+	            <li><Step>Read the report on your pull request.</Step></li>
+	          </ul>
 	          <div class="code"><CodeBlock label={".github/workflows/a11ign.yml"} code={yaml} /></div>
 	        </div>
 	      </div>
@@ -58,7 +58,7 @@ const yaml = "jobs:\n  a11y:\n    runs-on: windows-2022\n    steps:\n      - use
 	          <div class="sh"><span class="num" aria-hidden="true">02</span><h2 id="agent" class="x44">Let your AI agent set it up</h2></div>
 	          <p class="body" style="color:var(--text-muted)">Install the skill, then ask in plain words. Your agent opens a pull request for you to review.</p>
 	        </div>
-	        <div class="repR"><AgentSetup /></div>
+	        <div class="repR"><AgentSetup numbered={false} /></div>
 	      </div>
 	          <div class="in" style="margin-top:var(--space-5)"><a class="lnk" href={href('/get-started') + '#agent'}>Use another agent, or paste a prompt instead</a></div>
 	    </section>
@@ -172,6 +172,7 @@ body{margin:0}
 .repR{flex:1 1 0;min-width:0;margin:0;display:flex;flex-direction:column;gap:16px}
 .how{display:flex;gap:48px;align-items:flex-start}
 .steps{list-style:none;margin:0;padding:0;width:460px;flex:none;display:flex;flex-direction:column;gap:32px}
+.steps.list>li::before{top:.42em}
 .code{flex:1 1 0;min-width:0;width:100%}
 .pyr{width:960px;max-width:100%;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:10px}
 .tt{width:54%;clip-path:polygon(10% 0,90% 0,100% 100%,0 100%);padding:28px 72px 30px;text-align:center;display:flex;flex-direction:column;gap:6px;background:var(--pen);color:var(--ink)}

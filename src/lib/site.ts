@@ -2,6 +2,7 @@ import seoReadme from '../data/seo/README.md?raw';
 
 export const SITE_URL = 'https://www.a11ign.com';
 export const GITHUB_URL = 'https://github.com/a11ign/a11ign';
+export const LINKEDIN_URL = 'https://www.linkedin.com/company/a11ign';
 export const SHARE_IMAGE = `${SITE_URL}/a11ign-share-card.png`;
 export const SHARE_IMAGE_ALT = 'a11ign: test accessibility the way a screen reader user hears it';
 /** The date the docs pages were written, fixed in code rather than taken from the build. */

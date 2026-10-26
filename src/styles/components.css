@@ -79,6 +79,7 @@
 .a1-step-n{flex:none;display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:var(--pen);color:var(--ink);font:600 20px/1 var(--font-mono)}
 [data-theme="light"] .a1-step-n{background:var(--ink);color:var(--pen)}
 .a1-step-t{padding-top:9px}
+.a1-step-bare .a1-step-t{padding-top:0}
 
 /* Nav */
 .a1-nav{box-sizing:border-box;display:flex;align-items:center;gap:20px;min-height:72px;padding:12px 32px;border-bottom:1px solid var(--divider);background:var(--ground);color:var(--text);font:500 18px/1.2 var(--font-sans)}

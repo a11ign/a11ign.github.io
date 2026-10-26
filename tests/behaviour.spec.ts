@@ -322,14 +322,14 @@ test.describe('content the design marks as unfinished ships as designed', () => 
 
 	test('placeholders stay visible', async ({ page }) => {
 		await page.goto('/contact');
-		for (const text of ['X [handle]', 'LinkedIn [page]', 'Reddit [community]', 'YouTube [channel]']) {
+		for (const text of ['X [handle]', 'Reddit [community]']) {
 			await expect(page.getByRole('link', { name: text })).toHaveAttribute('href', '#');
 		}
 		await page.goto('/resources');
 		await expect(page.getByText('[Placeholder: two sentences on what this guide covers and who it’s for.]')).toBeVisible();
 		await expect(page.getByText('[Author] · [Date] · [Read time]')).toBeVisible();
 		await page.goto('/');
-		await expect(page.getByRole('contentinfo').getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', '#');
+		await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Reddit' })).toHaveAttribute('href', '#');
 	});
 
 	test('the 404 page follows the design', async ({ page }) => {

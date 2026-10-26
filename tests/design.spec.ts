@@ -171,6 +171,65 @@ test.describe('Home', () => {
 	}
 });
 
+test.describe('Home steps', () => {
+	test('the steps carry no number circles, because the section chips already number the page', async ({ page }) => {
+		await page.goto('/');
+		await expect(page.locator('main .sh .num')).toHaveText(['01', '02', '03', '04', '05']);
+		await expect(page.locator('.a1-step-n')).toHaveCount(0);
+		await expect(page.locator('ul.steps > li')).toHaveText([
+			'Add a few lines to your GitHub project.',
+			'GitHub runs a11ign on a Windows machine, with a real screen reader.',
+			'Read the report on your pull request.',
+		]);
+		await expect(page.locator('.ag .a1-step')).toHaveText(['Install the skill', 'Ask in plain words']);
+	});
+
+	test('Get started keeps the numbered install steps', async ({ page }) => {
+		await page.goto('/get-started');
+		await expect(page.locator('.a1-step-n').first()).toBeVisible();
+	});
+});
+
+test.describe('Footer and follow links', () => {
+	test('the footer lists X, LinkedIn and Reddit, LinkedIn goes to the company page, and there is no YouTube', async ({ page }) => {
+		await page.goto('/');
+		const links = page.getByRole('contentinfo').getByRole('list', { name: 'Follow us' }).getByRole('link');
+		await expect(links).toHaveText(['X', 'LinkedIn', 'Reddit']);
+		await expect(links.nth(1)).toHaveAttribute('href', 'https://www.linkedin.com/company/a11ign');
+		await expect(page.getByRole('contentinfo').getByText('YouTube')).toHaveCount(0);
+	});
+
+	test('the gap between the X and LinkedIn text is no wider than the LinkedIn and Reddit one, plus a few pixels', async ({ page }) => {
+		await page.setViewportSize({ width: 1440, height: 900 });
+		await page.goto('/');
+		const gaps = await page.$$eval('.sf .soc .fl', (links) => {
+			const rects = links.map((link) => {
+				const range = document.createRange();
+				range.selectNodeContents(link);
+				return range.getBoundingClientRect();
+			});
+			return rects.slice(1).map((rect, i) => rect.left - rects[i].right);
+		});
+		expect(gaps[0]).toBeLessThan(30);
+		expect(gaps[0] - gaps[1]).toBeLessThan(8);
+	});
+
+	test('Contact follows the footer: no YouTube, and the LinkedIn link is the company page without a placeholder', async ({ page }) => {
+		await page.goto('/contact');
+		await expect(page.getByText('YouTube')).toHaveCount(0);
+		const linkedin = page.locator('p', { hasText: 'Follow us:' }).getByRole('link', { name: 'LinkedIn', exact: true });
+		await expect(linkedin).toHaveAttribute('href', 'https://www.linkedin.com/company/a11ign');
+	});
+});
+
+test.describe('About', () => {
+	test('the roadmap section has no buttons: the two below it are the only pair', async ({ page }) => {
+		await page.goto('/about');
+		await expect(page.locator('section[aria-labelledby="next"] a.a1-btn')).toHaveCount(0);
+		await expect(page.locator('main a.a1-btn')).toHaveText(['Add to your workflow', 'Star on GitHub']);
+	});
+});
+
 test.describe('Get started', () => {
 	test('the 40-character commit note sits directly under the workflow code block, above steps 1 to 3', async ({ page }) => {
 		await page.goto('/get-started');
@@ -194,6 +253,14 @@ test.describe('Get started', () => {
 });
 
 test.describe('FAQ', () => {
+	test('"Do we process your data?" answers no, and says what it talks to', async ({ page }) => {
+		await page.goto('/faq');
+		const item = page.locator('details', { hasText: 'Do we process your data?' });
+		await expect(item.locator('summary')).toHaveText('Do we process your data?');
+		await expect(item.locator('.ans')).toHaveText('No. It only talks to the page you point it at and your own machine. No tracking, no phoning home.');
+		await expect(page.getByText('What does it send anywhere?')).toHaveCount(0);
+	});
+
 	test('the run-cost answer says the Windows minutes cost more in a private repository', async ({ page }) => {
 		await page.goto('/faq');
 		const answer = page.locator('details', { hasText: 'How long does a run take, and what does it cost?' }).locator('.ans');
