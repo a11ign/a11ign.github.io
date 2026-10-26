@@ -193,6 +193,14 @@ test.describe('Get started', () => {
 	});
 });
 
+test.describe('FAQ', () => {
+	test('the run-cost answer says the Windows minutes cost more in a private repository', async ({ page }) => {
+		await page.goto('/faq');
+		const answer = page.locator('details', { hasText: 'How long does a run take, and what does it cost?' }).locator('.ans');
+		await expect(answer).toContainText('In a private repository, GitHub charges more per minute for Windows runners than for Linux ones');
+	});
+});
+
 test.describe('How we know it works and About', () => {
 	test('no heading starts with "Step 1", "Step 2" or "Step 3"', async ({ page }) => {
 		await page.goto('/docs/how-we-know-it-works');
