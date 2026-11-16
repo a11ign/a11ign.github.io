@@ -1,0 +1,32 @@
+# a11ign
+
+> a11ign runs a real screen reader (NVDA) over web pages and reports the accessibility barriers a screen reader user would hit, quoting the exact words it said. It is free, open source (AGPL-3.0-or-later) and sends nothing anywhere. It runs as a GitHub Action on a Windows machine GitHub provides, or from the command line.
+
+Findings are evidence for a person to act on, not a score or a compliance certificate. A quick check that predicts what NVDA would say is coming soon and is always labelled a prediction.
+
+## Start here
+
+- [Test accessibility the way a screen reader user hears it](https://www.a11ign.com/): a11ign runs a real screen reader (NVDA) over your pages and shows you the barriers it hits, with the exact words it said. Free and open source.
+- [Get started with a11ign](https://www.a11ign.com/get-started): Add a11ign to your GitHub workflow, ask your AI agent to do it, or run it from the command line.
+- [What a11ign checks and how it fits your tech stack](https://www.a11ign.com/what-it-checks): What a real screen reader catches that code checks miss, how a finding is decided, and how a11ign sits beside GitHub Actions, axe-core and your tests.
+
+## Docs
+
+- [Documentation](https://www.a11ign.com/docs): Set up a11ign and see how it works: the GitHub Action guide, the evidence, security and how to contribute.
+- [GitHub Action guide](https://www.a11ign.com/docs/github-action): The workflow file, the settings you will use, and what the GitHub Action gives back.
+- [How we know a11ign works](https://www.a11ign.com/docs/how-we-know-it-works): How a11ign is tested, the numbers measured so far, and what is not proven yet.
+- [Security](https://www.a11ign.com/docs/security): What a11ign does to a page, how to run it safely, and how to report a problem privately.
+- [Contributing](https://www.a11ign.com/docs/contributing): Ways to help, how to run the checks, and the licence.
+
+## More
+
+- [About a11ign](https://www.a11ign.com/about): Why a11ign exists, what we believe, how it is built and who is behind it.
+- [Frequently asked questions](https://www.a11ign.com/faq): Answers on Windows, accounts and keys, scores, axe-core, privacy, licence and law.
+- [Contact and support](https://www.a11ign.com/contact): Where to send questions, bugs, security reports and press enquiries.
+
+## Optional
+
+- [Privacy policy](https://www.a11ign.com/privacy): What data this website handles. a11ign itself sends nothing anywhere.
+- [Cookie policy](https://www.a11ign.com/cookies): This website sets no cookies.
+- [Terms of use](https://www.a11ign.com/terms): The terms for using this website.
+- [Accessibility statement](https://www.a11ign.com/accessibility): How accessible this website is and how to report a problem.
